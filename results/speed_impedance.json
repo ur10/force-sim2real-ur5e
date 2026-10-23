@@ -1,0 +1,214 @@
+{
+ "note": "SIMULATION, provisional measured parameters, fin-ray grasp, 0.5 mm radial clearance",
+ "probe": {
+  "v10_d0.5": {
+   "speed_mm_s": 10.0,
+   "damping_scale": 0.5,
+   "n": 24,
+   "seated": 2,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0
+   ],
+   "peak_n_median": 2.775,
+   "peak_n_max": 3.12,
+   "peak_axial_n_median": 2.62,
+   "t_seat_s_median": 2.1166666666666663
+  },
+  "v10_d1": {
+   "speed_mm_s": 10.0,
+   "damping_scale": 1.0,
+   "n": 24,
+   "seated": 3,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0
+   ],
+   "peak_n_median": 4.72,
+   "peak_n_max": 4.92,
+   "peak_axial_n_median": 4.46,
+   "t_seat_s_median": 2.1291666666666664
+  },
+  "v10_d2": {
+   "speed_mm_s": 10.0,
+   "damping_scale": 2.0,
+   "n": 24,
+   "seated": 4,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0,
+    1.0
+   ],
+   "peak_n_median": 8.225000000000001,
+   "peak_n_max": 8.76,
+   "peak_axial_n_median": 7.925000000000001,
+   "t_seat_s_median": 2.185416666666667
+  },
+  "v2.5_d0.5": {
+   "speed_mm_s": 2.5,
+   "damping_scale": 0.5,
+   "n": 24,
+   "seated": 2,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0
+   ],
+   "peak_n_median": 1.26,
+   "peak_n_max": 1.88,
+   "peak_axial_n_median": 1.22,
+   "t_seat_s_median": 8.208333333333332
+  },
+  "v2.5_d1": {
+   "speed_mm_s": 2.5,
+   "damping_scale": 1.0,
+   "n": 24,
+   "seated": 2,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0
+   ],
+   "peak_n_median": 1.685,
+   "peak_n_max": 2.37,
+   "peak_axial_n_median": 1.635,
+   "t_seat_s_median": 8.212499999999999
+  },
+  "v2.5_d2": {
+   "speed_mm_s": 2.5,
+   "damping_scale": 2.0,
+   "n": 24,
+   "seated": 2,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0
+   ],
+   "peak_n_median": 2.6950000000000003,
+   "peak_n_max": 3.08,
+   "peak_axial_n_median": 2.55,
+   "t_seat_s_median": 8.195833333333333
+  },
+  "v20_d0.5": {
+   "speed_mm_s": 20.0,
+   "damping_scale": 0.5,
+   "n": 24,
+   "seated": 3,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0
+   ],
+   "peak_n_median": 4.77,
+   "peak_n_max": 5.01,
+   "peak_axial_n_median": 4.55,
+   "t_seat_s_median": 1.1041666666666667
+  },
+  "v20_d1": {
+   "speed_mm_s": 20.0,
+   "damping_scale": 1.0,
+   "n": 24,
+   "seated": 4,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0,
+    1.0
+   ],
+   "peak_n_median": 8.235,
+   "peak_n_max": 8.89,
+   "peak_axial_n_median": 7.94,
+   "t_seat_s_median": 1.1333333333333333
+  },
+  "v20_d2": {
+   "speed_mm_s": 20.0,
+   "damping_scale": 2.0,
+   "n": 24,
+   "seated": 5,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0,
+    1.0
+   ],
+   "peak_n_median": 12.899999999999999,
+   "peak_n_max": 14.05,
+   "peak_axial_n_median": 12.67,
+   "t_seat_s_median": 1.1541666666666666
+  },
+  "v5_d0.5": {
+   "speed_mm_s": 5.0,
+   "damping_scale": 0.5,
+   "n": 24,
+   "seated": 2,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0
+   ],
+   "peak_n_median": 1.7850000000000001,
+   "peak_n_max": 2.33,
+   "peak_axial_n_median": 1.6949999999999998,
+   "t_seat_s_median": 4.125
+  },
+  "v5_d1": {
+   "speed_mm_s": 5.0,
+   "damping_scale": 1.0,
+   "n": 24,
+   "seated": 2,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0
+   ],
+   "peak_n_median": 2.74,
+   "peak_n_max": 2.98,
+   "peak_axial_n_median": 2.585,
+   "t_seat_s_median": 4.133333333333333
+  },
+  "v5_d2": {
+   "speed_mm_s": 5.0,
+   "damping_scale": 2.0,
+   "n": 24,
+   "seated": 3,
+   "aborted": 0,
+   "seated_offsets_mm": [
+    0.0
+   ],
+   "peak_n_median": 4.6899999999999995,
+   "peak_n_max": 4.93,
+   "peak_axial_n_median": 4.46,
+   "t_seat_s_median": 4.1625
+  }
+ },
+ "expert": {
+  "s0.5": {
+   "speed_scale": 0.5,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 5.067,
+   "median_peak_force_n": 2.12
+  },
+  "s2": {
+   "speed_scale": 2.0,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 1.533,
+   "median_peak_force_n": 2.4699999999999998
+  },
+  "s4": {
+   "speed_scale": 4.0,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 1.133,
+   "median_peak_force_n": 2.495
+  }
+ }
+}

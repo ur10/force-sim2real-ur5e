@@ -1,0 +1,1973 @@
+{
+ "note": "SIMULATION (Isaac Lab 2.0.2 / PhysX). One row per held-out evaluation file of the author's runs; sources are paths under outputs/ur_nut/ of the run machine (not included). 128 episodes = 64 envs x 2 rounds, seed 100.",
+ "rows": [
+  {
+   "source": "contact_sim/media/finray_check/expert.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 2,
+   "seated": 2,
+   "seated_ci95": [
+    0.342,
+    1
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 3.8899999999999997,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "contact_sim/media/finray_check/expert_v2.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 4,
+   "seated": 4,
+   "seated_ci95": [
+    0.51,
+    1
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.165,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_contact/eval_expert.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.135,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_contact/eval_replay.json",
+   "policy": "replay",
+   "driver": "replay",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 7,
+   "seated_ci95": [
+    0.027,
+    0.109
+   ],
+   "aborted": 0,
+   "median_time_s": 4.067,
+   "median_peak_force_n": 4.12,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_contact/eval_student_it1.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/dagger_contact/student_it1.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 16,
+   "seated_ci95": [
+    0.078,
+    0.193
+   ],
+   "aborted": 112,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 40.08,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_contact/eval_student_it2.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/dagger_contact/student_it2.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 79,
+   "seated_ci95": [
+    0.531,
+    0.697
+   ],
+   "aborted": 34,
+   "median_time_s": 2.8,
+   "median_peak_force_n": 10.765,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_contact/eval_student_it3.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/dagger_contact/student_it3.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 65,
+   "seated_ci95": [
+    0.422,
+    0.593
+   ],
+   "aborted": 23,
+   "median_time_s": 2.7,
+   "median_peak_force_n": 4.75,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_contact/eval_student_it4.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/dagger_contact/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 67,
+   "seated_ci95": [
+    0.437,
+    0.608
+   ],
+   "aborted": 0,
+   "median_time_s": 2.8,
+   "median_peak_force_n": 6.495,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_contact/eval_student_it4_novision.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/dagger_contact/student_it4_novision.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 37,
+   "seated_ci95": [
+    0.218,
+    0.373
+   ],
+   "aborted": 0,
+   "median_time_s": 4.8,
+   "median_peak_force_n": 6.56,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_contact/eval_student_it4_nowrench.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/dagger_contact/student_it4_nowrench.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 0,
+   "seated_ci95": [
+    0,
+    0.029
+   ],
+   "aborted": 4,
+   "median_time_s": null,
+   "median_peak_force_n": 5.635,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_contact/eval_wrench_expert.json",
+   "policy": "wrench_expert",
+   "driver": "wrench_expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 20,
+   "seated_ci95": [
+    0.103,
+    0.229
+   ],
+   "aborted": 0,
+   "median_time_s": 6.8165,
+   "median_peak_force_n": 12.675,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_hover/eval_expert.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 2.567,
+   "median_peak_force_n": 2.075,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_hover/eval_replay.json",
+   "policy": "replay",
+   "driver": "replay",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 7,
+   "seated_ci95": [
+    0.027,
+    0.109
+   ],
+   "aborted": 0,
+   "median_time_s": 4.067,
+   "median_peak_force_n": 4.12,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_hover/eval_student_it1.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/dagger/student_it1.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 20,
+   "seated_ci95": [
+    0.103,
+    0.229
+   ],
+   "aborted": 108,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 40.12,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_hover/eval_student_it4.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/dagger/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 0,
+   "seated_ci95": [
+    0,
+    0.029
+   ],
+   "aborted": 0,
+   "median_time_s": null,
+   "median_peak_force_n": 2.21,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_hover/eval_student_it4_novision.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/dagger/student_it4_novision.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 0,
+   "seated_ci95": [
+    0,
+    0.029
+   ],
+   "aborted": 0,
+   "median_time_s": null,
+   "median_peak_force_n": 2.495,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_hover/eval_student_it4_nowrench.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/dagger/student_it4_nowrench.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 0,
+   "seated_ci95": [
+    0,
+    0.029
+   ],
+   "aborted": 0,
+   "median_time_s": null,
+   "median_peak_force_n": 1.98,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "dagger_hover/eval_wrench_expert.json",
+   "policy": "wrench_expert",
+   "driver": "wrench_expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 20,
+   "seated_ci95": [
+    0.103,
+    0.229
+   ],
+   "aborted": 0,
+   "median_time_s": 6.8165,
+   "median_peak_force_n": 12.675,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/dagger/eval_expert.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.6950000000000003,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/dagger/eval_replay.json",
+   "policy": "replay",
+   "driver": "replay",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 20,
+   "seated_ci95": [
+    0.103,
+    0.229
+   ],
+   "aborted": 0,
+   "median_time_s": 4.067,
+   "median_peak_force_n": 4.005,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/dagger/eval_student_it1.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/finray/dagger/student_it1.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 31,
+   "seated_ci95": [
+    0.176,
+    0.323
+   ],
+   "aborted": 97,
+   "median_time_s": 2.567,
+   "median_peak_force_n": 40.09,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/dagger/eval_student_it2.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/finray/dagger/student_it2.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 70,
+   "seated_ci95": [
+    0.461,
+    0.63
+   ],
+   "aborted": 56,
+   "median_time_s": 2.633,
+   "median_peak_force_n": 8.785,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/dagger/eval_student_it3.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/finray/dagger/student_it3.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 98,
+   "seated_ci95": [
+    0.685,
+    0.831
+   ],
+   "aborted": 14,
+   "median_time_s": 2.667,
+   "median_peak_force_n": 5.535,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/dagger/eval_student_it4.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/finray/dagger/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 118,
+   "seated_ci95": [
+    0.862,
+    0.957
+   ],
+   "aborted": 1,
+   "median_time_s": 2.7,
+   "median_peak_force_n": 4.029999999999999,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/dagger/eval_student_it4_novision.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/finray/dagger/student_it4_novision.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 91,
+   "seated_ci95": [
+    0.627,
+    0.782
+   ],
+   "aborted": 2,
+   "median_time_s": 3.033,
+   "median_peak_force_n": 5.695,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/dagger/eval_student_it4_nowrench.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/finray/dagger/student_it4_nowrench.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 8,
+   "seated_ci95": [
+    0.032,
+    0.118
+   ],
+   "aborted": 28,
+   "median_time_s": 5.6835,
+   "median_peak_force_n": 6.77,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/dagger/eval_wrench_expert.json",
+   "policy": "wrench_expert",
+   "driver": "wrench_expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 35,
+   "seated_ci95": [
+    0.204,
+    0.356
+   ],
+   "aborted": 0,
+   "median_time_s": 4.133,
+   "median_peak_force_n": 12.59,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/eval_dagger_center_it4.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/dagger_contact/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 86,
+   "seated_ci95": [
+    0.587,
+    0.747
+   ],
+   "aborted": 0,
+   "median_time_s": 2.8834999999999997,
+   "median_peak_force_n": 6.33,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/eval_expert.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.6950000000000003,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/eval_replay.json",
+   "policy": "replay",
+   "driver": "replay",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 20,
+   "seated_ci95": [
+    0.103,
+    0.229
+   ],
+   "aborted": 0,
+   "median_time_s": 4.067,
+   "median_peak_force_n": 4.005,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/eval_residual_center_45m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/residual/replay_base/residual.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 80,
+   "seated_ci95": [
+    0.539,
+    0.704
+   ],
+   "aborted": 0,
+   "median_time_s": 3.1334999999999997,
+   "median_peak_force_n": 4.4,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/eval_residual_center_90m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/residual/replay_base_90m/residual.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 122,
+   "seated_ci95": [
+    0.902,
+    0.978
+   ],
+   "aborted": 0,
+   "median_time_s": 3.167,
+   "median_peak_force_n": 4.195,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/eval_wrench_expert.json",
+   "policy": "wrench_expert",
+   "driver": "wrench_expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 35,
+   "seated_ci95": [
+    0.204,
+    0.356
+   ],
+   "aborted": 0,
+   "median_time_s": 4.133,
+   "median_peak_force_n": 12.59,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/residual_90m/eval_residual.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/finray/residual_90m/residual.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 112,
+   "seated_ci95": [
+    0.807,
+    0.922
+   ],
+   "aborted": 1,
+   "median_time_s": 3.45,
+   "median_peak_force_n": 3.99,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/residual_90m/eval_residual_15m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/finray/residual_90m/residual_15m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 77,
+   "seated_ci95": [
+    0.515,
+    0.682
+   ],
+   "aborted": 0,
+   "median_time_s": 4.533,
+   "median_peak_force_n": 4.18,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/residual_90m/eval_residual_30m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/finray/residual_90m/residual_30m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 85,
+   "seated_ci95": [
+    0.579,
+    0.74
+   ],
+   "aborted": 2,
+   "median_time_s": 3.067,
+   "median_peak_force_n": 4.01,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/residual_90m/eval_residual_45m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/finray/residual_90m/residual_45m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 95,
+   "seated_ci95": [
+    0.66,
+    0.81
+   ],
+   "aborted": 0,
+   "median_time_s": 3.9,
+   "median_peak_force_n": 4.055,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/residual_90m/eval_residual_60m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/finray/residual_90m/residual_60m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 90,
+   "seated_ci95": [
+    0.619,
+    0.775
+   ],
+   "aborted": 0,
+   "median_time_s": 3.4,
+   "median_peak_force_n": 4.0649999999999995,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/residual_90m/eval_residual_75m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/finray/residual_90m/residual_75m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 104,
+   "seated_ci95": [
+    0.736,
+    0.871
+   ],
+   "aborted": 0,
+   "median_time_s": 3.45,
+   "median_peak_force_n": 4.04,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "finray/residual_90m/eval_residual_90m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/finray/residual_90m/residual_90m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 112,
+   "seated_ci95": [
+    0.807,
+    0.922
+   ],
+   "aborted": 1,
+   "median_time_s": 3.45,
+   "median_peak_force_n": 3.99,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "measured/clearance/c1.0_dagger.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 1.0,
+   "n": 128,
+   "seated": 115,
+   "seated_ci95": [
+    0.834,
+    0.94
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 1.93,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/clearance/c1.0_dagger_kinematic.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger_kinematic/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 1.0,
+   "n": 128,
+   "seated": 95,
+   "seated_ci95": [
+    0.66,
+    0.81
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.145,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "kinematic",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/clearance/c1.0_expert.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 1.0,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.66,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/clearance/c1.0_replay.json",
+   "policy": "replay",
+   "driver": "replay",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 1.0,
+   "n": 128,
+   "seated": 50,
+   "seated_ci95": [
+    0.31,
+    0.477
+   ],
+   "aborted": 0,
+   "median_time_s": 4.067,
+   "median_peak_force_n": 0.545,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/clearance/c1.0_residual_replay.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/measured/residual_replay_base_40m/residual.pt",
+   "radial_clearance_mm": 1.0,
+   "n": 128,
+   "seated": 64,
+   "seated_ci95": [
+    0.415,
+    0.585
+   ],
+   "aborted": 0,
+   "median_time_s": 3.4835000000000003,
+   "median_peak_force_n": 1.9449999999999998,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/clearance/c1.0_residual_student.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/measured/residual_student_base_40m/residual.pt",
+   "radial_clearance_mm": 1.0,
+   "n": 128,
+   "seated": 111,
+   "seated_ci95": [
+    0.798,
+    0.915
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 3.0,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/clearance/c2.7_dagger.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 2.7,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 1.6949999999999998,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/clearance/c2.7_dagger_kinematic.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger_kinematic/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 2.7,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 1.89,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "kinematic",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/clearance/c2.7_expert.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 2.7,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.66,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/clearance/c2.7_replay.json",
+   "policy": "replay",
+   "driver": "replay",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 2.7,
+   "n": 128,
+   "seated": 122,
+   "seated_ci95": [
+    0.902,
+    0.978
+   ],
+   "aborted": 0,
+   "median_time_s": 4.067,
+   "median_peak_force_n": 0.35,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/clearance/c2.7_residual_replay.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/measured/residual_replay_base_40m/residual.pt",
+   "radial_clearance_mm": 2.7,
+   "n": 128,
+   "seated": 124,
+   "seated_ci95": [
+    0.922,
+    0.988
+   ],
+   "aborted": 0,
+   "median_time_s": 3.333,
+   "median_peak_force_n": 1.75,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/clearance/c2.7_residual_student.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/measured/residual_student_base_40m/residual.pt",
+   "radial_clearance_mm": 2.7,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 3.075,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger/eval_expert.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.665,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger/eval_replay.json",
+   "policy": "replay",
+   "driver": "replay",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 35,
+   "seated_ci95": [
+    0.204,
+    0.356
+   ],
+   "aborted": 0,
+   "median_time_s": 4.067,
+   "median_peak_force_n": 3.6950000000000003,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger/eval_student_it1.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger/student_it1.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 35,
+   "seated_ci95": [
+    0.204,
+    0.356
+   ],
+   "aborted": 29,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 6.0649999999999995,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger/eval_student_it2.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger/student_it2.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 72,
+   "seated_ci95": [
+    0.476,
+    0.645
+   ],
+   "aborted": 1,
+   "median_time_s": 2.55,
+   "median_peak_force_n": 2.175,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger/eval_student_it3.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger/student_it3.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 86,
+   "seated_ci95": [
+    0.587,
+    0.747
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.85,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger/eval_student_it4.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 91,
+   "seated_ci95": [
+    0.627,
+    0.782
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.185,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger/eval_student_it4_novision.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger/student_it4_novision.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 60,
+   "seated_ci95": [
+    0.384,
+    0.555
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 4.695,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger/eval_student_it4_nowrench.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger/student_it4_nowrench.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 84,
+   "seated_ci95": [
+    0.57,
+    0.733
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.48,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger/eval_wrench_expert.json",
+   "policy": "wrench_expert",
+   "driver": "wrench_expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 41,
+   "seated_ci95": [
+    0.246,
+    0.405
+   ],
+   "aborted": 0,
+   "median_time_s": 4.133,
+   "median_peak_force_n": 3.885,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger_kinematic/eval_student_it1.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger_kinematic/student_it1.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 27,
+   "seated_ci95": [
+    0.149,
+    0.29
+   ],
+   "aborted": 21,
+   "median_time_s": 2.567,
+   "median_peak_force_n": 6.035,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "kinematic",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger_kinematic/eval_student_it2.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger_kinematic/student_it2.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 66,
+   "seated_ci95": [
+    0.43,
+    0.6
+   ],
+   "aborted": 4,
+   "median_time_s": 2.567,
+   "median_peak_force_n": 2.97,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "kinematic",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/dagger_kinematic/eval_student_it4.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger_kinematic/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 78,
+   "seated_ci95": [
+    0.523,
+    0.69
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 3.025,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "kinematic",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/expert_speed/s0.5.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 5.067,
+   "median_peak_force_n": 2.12,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 0.5
+   }
+  },
+  {
+   "source": "measured/expert_speed/s2.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 1.533,
+   "median_peak_force_n": 2.4699999999999998,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 2
+   }
+  },
+  {
+   "source": "measured/expert_speed/s4.json",
+   "policy": "expert",
+   "driver": "expert",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 128,
+   "seated_ci95": [
+    0.971,
+    1.0
+   ],
+   "aborted": 0,
+   "median_time_s": 1.133,
+   "median_peak_force_n": 2.495,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 4
+   }
+  },
+  {
+   "source": "measured/identified_sensor/dagger.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 90,
+   "seated_ci95": [
+    0.619,
+    0.775
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 1.5750000000000002,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.15,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/identified_sensor/dagger_kinematic.json",
+   "policy": "mix",
+   "driver": "student",
+   "student": "outputs/ur_nut/measured/dagger_kinematic/student_it4.pt",
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 80,
+   "seated_ci95": [
+    0.539,
+    0.704
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.36,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.15,
+   "env_cfg": {
+    "vision_source": "kinematic",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/identified_sensor/replay.json",
+   "policy": "replay",
+   "driver": "replay",
+   "student": null,
+   "residual": null,
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 35,
+   "seated_ci95": [
+    0.204,
+    0.356
+   ],
+   "aborted": 0,
+   "median_time_s": 4.067,
+   "median_peak_force_n": 3.475,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.15,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/identified_sensor/residual_replay.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/measured/residual_replay_base_40m/residual.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 44,
+   "seated_ci95": [
+    0.267,
+    0.43
+   ],
+   "aborted": 0,
+   "median_time_s": 3.4,
+   "median_peak_force_n": 3.615,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.15,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/identified_sensor/residual_student.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/measured/residual_student_base_40m/residual.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 88,
+   "seated_ci95": [
+    0.603,
+    0.761
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 2.625,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.15,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/residual_replay_base_40m/eval_residual.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/measured/residual_replay_base_40m/residual.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 45,
+   "seated_ci95": [
+    0.274,
+    0.438
+   ],
+   "aborted": 0,
+   "median_time_s": 3.567,
+   "median_peak_force_n": 3.8200000000000003,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "measured/residual_student_base_40m/eval_residual.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/measured/residual_student_base_40m/residual.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 93,
+   "seated_ci95": [
+    0.644,
+    0.796
+   ],
+   "aborted": 0,
+   "median_time_s": 2.533,
+   "median_peak_force_n": 3.705,
+   "grasp_model": "finray",
+   "rod_chamfer": 0.001,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": "oracle",
+    "speed_scale": 1.0
+   }
+  },
+  {
+   "source": "residual/eval_residual_replay_base.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/residual/replay_base/residual.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 81,
+   "seated_ci95": [
+    0.547,
+    0.711
+   ],
+   "aborted": 0,
+   "median_time_s": 3.333,
+   "median_peak_force_n": 4.53,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "residual/replay_base_90m/eval_residual.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/residual/replay_base_90m/residual.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 125,
+   "seated_ci95": [
+    0.933,
+    0.992
+   ],
+   "aborted": 0,
+   "median_time_s": 3.333,
+   "median_peak_force_n": 4.475,
+   "grasp_model": "center",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "residual/replay_base_90m/eval_residual_15m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/residual/replay_base_90m/residual_15m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 66,
+   "seated_ci95": [
+    0.43,
+    0.6
+   ],
+   "aborted": 0,
+   "median_time_s": 5.2165,
+   "median_peak_force_n": 4.665,
+   "grasp_model": null,
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "residual/replay_base_90m/eval_residual_30m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/residual/replay_base_90m/residual_30m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 63,
+   "seated_ci95": [
+    0.407,
+    0.578
+   ],
+   "aborted": 0,
+   "median_time_s": 3.7,
+   "median_peak_force_n": 4.305,
+   "grasp_model": "center",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "residual/replay_base_90m/eval_residual_45m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/residual/replay_base_90m/residual_45m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 78,
+   "seated_ci95": [
+    0.523,
+    0.69
+   ],
+   "aborted": 0,
+   "median_time_s": 3.233,
+   "median_peak_force_n": 4.359999999999999,
+   "grasp_model": "center",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "residual/replay_base_90m/eval_residual_60m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/residual/replay_base_90m/residual_60m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 116,
+   "seated_ci95": [
+    0.843,
+    0.946
+   ],
+   "aborted": 0,
+   "median_time_s": 3.433,
+   "median_peak_force_n": 4.73,
+   "grasp_model": "center",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "residual/replay_base_90m/eval_residual_75m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/residual/replay_base_90m/residual_75m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 122,
+   "seated_ci95": [
+    0.902,
+    0.978
+   ],
+   "aborted": 0,
+   "median_time_s": 3.333,
+   "median_peak_force_n": 4.83,
+   "grasp_model": "center",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  },
+  {
+   "source": "residual/replay_base_90m/eval_residual_90m.json",
+   "policy": "residual",
+   "driver": "residual",
+   "student": null,
+   "residual": "outputs/ur_nut/residual/replay_base_90m/residual_90m.pt",
+   "radial_clearance_mm": 0.5,
+   "n": 128,
+   "seated": 125,
+   "seated_ci95": [
+    0.933,
+    0.992
+   ],
+   "aborted": 0,
+   "median_time_s": 3.333,
+   "median_peak_force_n": 4.475,
+   "grasp_model": "center",
+   "rod_chamfer": 0.0,
+   "sensor_force_noise_n": 0.5,
+   "env_cfg": {
+    "vision_source": null,
+    "speed_scale": null
+   }
+  }
+ ]
+}

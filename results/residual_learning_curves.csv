@@ -1,0 +1,13 @@
+run,grasp_model,params,minutes,seated,n
+residual/replay_base_90m,center,placeholder,15,66,128
+residual/replay_base_90m,center,placeholder,30,63,128
+residual/replay_base_90m,center,placeholder,45,78,128
+residual/replay_base_90m,center,placeholder,60,116,128
+residual/replay_base_90m,center,placeholder,75,122,128
+residual/replay_base_90m,center,placeholder,90,125,128
+finray/residual_90m,finray,placeholder,15,77,128
+finray/residual_90m,finray,placeholder,30,85,128
+finray/residual_90m,finray,placeholder,45,95,128
+finray/residual_90m,finray,placeholder,60,90,128
+finray/residual_90m,finray,placeholder,75,104,128
+finray/residual_90m,finray,placeholder,90,112,128

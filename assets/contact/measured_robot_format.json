@@ -1,0 +1,46 @@
+{
+  "_units": "lengths in mm, mass in g. Fill every null; see config/MEASURE.md.",
+  "_provisional": {
+    "status": "PROVISIONAL camera estimates from 2026-11-22, not measurements. Replace before the hand-back to the simulation side.",
+    "source": "Two RealSense D455 snapshots (about 0.65-0.75 m from the rod, about 1 mm per pixel) with a hand-eye calibration; nothing touched.",
+    "uncertainty_mm_or_g": {
+      "ring.outer_d_mm": "+/-3 (green printed hex nut: about 30 across flats, about 35 across corners)",
+      "ring.height_mm": "+/-2",
+      "ring.mass_g": "+/-3 (PLA volume estimate, not weighed)",
+      "rod.d_mm": "+/-1.5 (threads look like M16; apparent width 17-18 mm including edge blur)",
+      "rod.tip_chamfer_mm": "guess: the rod tip was hidden under a nut",
+      "rod.spacer_d_mm": "+/-5 (dark hex at the bottom of the rod)",
+      "rod.spacer_h_mm": "+/-5 (top of the dark hex above the grey plate; the top of the green stack is about 85 mm above the plate)",
+      "grasp.ring_bottom_below_tcp_mm": "+/-15 (flange to fingertip about 220 mm, ring assumed to stick out about 5 mm below the tips; no ring was gripped)"
+    },
+    "not_estimable_without_contact": [
+      "ring.bore_d_mm: use rod.d_mm + 2 x the radial clearance from the registration side captures"
+    ]
+  },
+  "ring": {
+    "bore_d_mm": null,
+    "outer_d_mm": 32.0,
+    "height_mm": 14.0,
+    "mass_g": 8.0
+  },
+  "rod": {
+    "d_mm": 16.0,
+    "tip_chamfer_mm": 1.0,
+    "threaded": true,
+    "spacer_d_mm": 40.0,
+    "spacer_h_mm": 23.0
+  },
+  "printed_rings": [],
+  "grasp": {
+    "ring_bottom_below_tcp_mm": 225.0,
+    "tcp_offset_at_measurement": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "notes": "PROVISIONAL (camera). Robotiq 2F-85 with blue/black fin-ray fingers; flange to fingertip about 220 mm (+/-15). A yellow bracket at the flange carries two FLIR Blackfly S cameras whose blue GigE cables run up the arm. Fingertip width, thickness and where the tips touch the ring were not visible (no ring gripped). Rod tip about 150 mm above the grey plate. Which object is the main ring, and which spacer it seats on, are still to be confirmed."
+  }
+}

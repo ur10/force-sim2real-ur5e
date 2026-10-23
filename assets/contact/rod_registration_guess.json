@@ -1,0 +1,9 @@
+{
+ "axis_xy": [-0.085, -0.810],
+ "tip_z": 0.180,
+ "provisional": true,
+ "uncertainty_mm": {"axis_xy": 8, "tip_z": 15},
+ "method": "Not a registration. Robot kinematics at the three nut releases over the rod in ~/Desktop/data/ft_tester (GELLO, 2026-11-22): ring bottom = flange + 0.225 m along the tool z axis. Releases at (-79,-805,163), (-95,-812,187), (-85,-812,172) mm with 4-9 deg tool tilt; lateral moves of 4-5 mm still happening at ring-bottom heights of ~185-190 mm (impossible once the rod is in a ~2.7 mm-clearance bore), so the nuts were released at about the tip. tip_z also equals the earlier capture's 0.1801 m for what looks like the same stand on the same table.",
+ "not_used": "Camera triangulation: the realsense_front hand-eye calibration (2026-11-10) matches none of the ft_tester streams, and realsense_new / realsense_right match camera 1 only roughly, so camera-derived positions are not trusted until the calibration is re-checked.",
+ "date": "2026-11-22"
+}

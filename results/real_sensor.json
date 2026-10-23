@@ -1,0 +1,234 @@
+{
+ "note": "REAL data (UR5e built-in wrench, RTDE); 'sim_model' is the simulated sensor model for comparison",
+ "session": "20261122_123422_sensor1",
+ "channel": "actual_TCP_force",
+ "rate_hz": 500.0,
+ "payload_kg": 1.0,
+ "payload_cog_m": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "tcp_offset": [
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0
+ ],
+ "segments": [
+  {
+   "kind": "still",
+   "duration_s": 18.8,
+   "tilt_deg": 10.85,
+   "mean_force_n": [
+    0.709,
+    -0.107,
+    -0.572
+   ],
+   "force_std_n": [
+    0.1717,
+    0.104,
+    0.1593
+   ],
+   "torque_std_nm": [
+    0.00339,
+    0.00513,
+    0.00256
+   ],
+   "drift_n_per_s": [
+    -0.00121,
+    0.00147,
+    -0.00321
+   ],
+   "rest_stat_n": 0.092,
+   "moved_mm": 0.21
+  },
+  {
+   "kind": "still",
+   "duration_s": 19.3,
+   "tilt_deg": 7.79,
+   "mean_force_n": [
+    0.576,
+    -0.05,
+    -0.47
+   ],
+   "force_std_n": [
+    0.1666,
+    0.1123,
+    0.1744
+   ],
+   "torque_std_nm": [
+    0.00526,
+    0.00867,
+    0.0355
+   ],
+   "drift_n_per_s": [
+    -0.00081,
+    0.00364,
+    0.00177
+   ],
+   "rest_stat_n": 0.1083,
+   "moved_mm": 0.08
+  },
+  {
+   "kind": "still",
+   "duration_s": 14.6,
+   "tilt_deg": 18.02,
+   "mean_force_n": [
+    0.387,
+    1.242,
+    -0.689
+   ],
+   "force_std_n": [
+    0.1418,
+    0.1301,
+    0.1928
+   ],
+   "torque_std_nm": [
+    0.00393,
+    0.00394,
+    0.00458
+   ],
+   "drift_n_per_s": [
+    0.00239,
+    -0.01609,
+    -0.0225
+   ],
+   "rest_stat_n": 0.08,
+   "moved_mm": 0.2
+  },
+  {
+   "kind": "still",
+   "duration_s": 16.4,
+   "tilt_deg": 34.1,
+   "mean_force_n": [
+    0.533,
+    -0.316,
+    -0.06
+   ],
+   "force_std_n": [
+    0.1299,
+    0.0983,
+    0.1501
+   ],
+   "torque_std_nm": [
+    0.00305,
+    0.004,
+    0.00266
+   ],
+   "drift_n_per_s": [
+    0.00983,
+    0.00254,
+    0.01627
+   ],
+   "rest_stat_n": 0.0772,
+   "moved_mm": 0.09
+  },
+  {
+   "kind": "free",
+   "duration_s": 43.2,
+   "tilt_deg": 9.27,
+   "mean_force_n": [
+    0.806,
+    0.239,
+    -0.812
+   ],
+   "force_std_n": [
+    0.5299,
+    0.6744,
+    0.4715
+   ],
+   "torque_std_nm": [
+    0.06284,
+    0.06928,
+    0.0794
+   ],
+   "drift_n_per_s": [
+    -0.00269,
+    -0.00035,
+    -0.00828
+   ],
+   "rest_stat_n": 0.1994,
+   "moved_mm": 327.06
+  },
+  {
+   "kind": "free",
+   "duration_s": 20.4,
+   "tilt_deg": 10.81,
+   "mean_force_n": [
+    0.74,
+    0.127,
+    -0.605
+   ],
+   "force_std_n": [
+    0.6712,
+    0.8065,
+    0.5697
+   ],
+   "torque_std_nm": [
+    0.05418,
+    0.07646,
+    0.09316
+   ],
+   "drift_n_per_s": [
+    -0.00831,
+    0.01341,
+    0.00811
+   ],
+   "rest_stat_n": 0.4021,
+   "moved_mm": 307.69
+  }
+ ],
+ "summary": {
+  "force_std_n_per_axis_median": [
+   0.1542,
+   0.1082,
+   0.1668
+  ],
+  "torque_std_nm_per_axis_median": [
+   0.00366,
+   0.00456,
+   0.00362
+  ],
+  "drift_n_per_s_max_abs": 0.0225,
+  "rest_stat_n_median": 0.086,
+  "bias_spread_over_orientations_n": [
+   0.322,
+   1.558,
+   0.629
+  ],
+  "free_motion_force_std_n_per_axis_median": [
+   0.6006,
+   0.7405,
+   0.5206
+  ]
+ },
+ "sim_model": {
+  "rate_hz": 500.0,
+  "latency_s": 0.008,
+  "force_noise_n": 0.5,
+  "torque_noise_nm": 0.02,
+  "force_bias_n": 1.0,
+  "torque_bias_nm": 0.05,
+  "drift_n_per_s": 0.05,
+  "drift_nm_per_s": 0.0025,
+  "lowpass_hz": 20.0,
+  "gripper_mass": 0.925,
+  "gripper_cog_tool0": [
+   0.0,
+   0.0,
+   0.07
+  ],
+  "payload_mass_error": 0.0,
+  "payload_cog_error": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "reference": "tcp",
+  "frame": "base",
+  "sign": 1.0
+ }
+}

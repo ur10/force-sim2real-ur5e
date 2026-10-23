@@ -1,0 +1,29 @@
+{
+ "_notes": "PROVISIONAL first-pass values from ~/ring_rod_probe/config/measured.json on the robot machine (2026-11-22, camera estimates, not calipers; treat as correct for the first pass). Sim units: m, kg.",
+ "_sources": {
+  "ring_outer_r": "outer_d 32 mm +/-3 (green printed hex nut, ~30 across flats, ~35 across corners)",
+  "ring_height": "14 mm +/-2",
+  "ring_bore_r": "NOT measured: kept at the RGB silhouette fit (10.71 mm); replace with rod_r + radial clearance from the registration side captures",
+  "rod_r": "rod d 16 mm +/-1.5 (threads look like M16)",
+  "rod_chamfer": "1 mm, guess (tip hidden)",
+  "spacer_r": "spacer d 40 mm +/-5",
+  "mass": "8 g +/-3 (PLA volume estimate)",
+  "ring_bottom_below_flange": "225 mm +/-15 (flange to fingertip ~220 mm, ring ~5 mm below the tips)",
+  "finray_tip_below_tcp": "fingertip 220 mm below the flange = 20 mm below the sim TCP (0.20 m below tool0)",
+  "tip_below_ring_top": "ring top 211 mm below the flange (225 - 14), tips at 220 mm: 9 mm"
+ },
+ "geometry": {
+  "ring_outer_r": 0.016,
+  "ring_height": 0.014,
+  "rod_r": 0.008,
+  "rod_chamfer": 0.001,
+  "rod_threaded": true,
+  "spacer_r": 0.02
+ },
+ "in_hand": {
+  "mass": 0.008,
+  "ring_bottom_below_flange": 0.225,
+  "finray_tip_below_tcp": 0.02,
+  "tip_below_ring_top": 0.009
+ }
+}

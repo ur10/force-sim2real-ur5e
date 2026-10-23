@@ -1,0 +1,2886 @@
+{
+ "task": "nut onto the bolt-stand rod (insertion over a rod, not threaded fastening)",
+ "status": "generated kinematic demonstrations; not yet executed with physics or on hardware",
+ "conventions": {
+  "pose": "wxyz_xyz: unit quaternion (w, x, y, z) then position (x, y, z)",
+  "units": "m, rad, s",
+  "frame": "robot base (URDF 'ur_base', the frame RTDE reports poses in and T_cam2base uses)",
+  "camera_frame": "OpenCV/ROS optical: z forward, x right, y down; T_base_cam is camera-to-base"
+ },
+ "timing": {
+  "dt_s": 0.03333333333333333,
+  "rate_hz": 30.0,
+  "note": "kinematic replay has no time; carry steps are consecutive human-video frames at 30 Hz, the other phases are the generator's fixed step counts played at the same rate. Scale time before execution if checks.time_scale_for_limit > 1 or the lab's limits are lower.",
+  "joint_speed_limit_rad_s": [
+   3.1416,
+   3.1416,
+   3.1416,
+   3.1416,
+   3.1416,
+   3.1416
+  ]
+ },
+ "robot": {
+  "arm": "UR5e",
+  "gripper": "Robotiq 2F-85",
+  "urdf": "data/ur5e_robotiq/ur5e_robotiq85_ik.urdf",
+  "arm_joints": [
+   "shoulder_pan_joint",
+   "shoulder_lift_joint",
+   "elbow_joint",
+   "wrist_1_joint",
+   "wrist_2_joint",
+   "wrist_3_joint"
+  ],
+  "gripper_joint": "finger_joint (rad, 0 = open)",
+  "joint_limits_rad": {
+   "lower": [
+    -6.2832,
+    -6.2832,
+    -3.1416,
+    -6.2832,
+    -6.2832,
+    -6.2832
+   ],
+   "upper": [
+    6.2832,
+    6.2832,
+    3.1416,
+    6.2832,
+    6.2832,
+    6.2832
+   ]
+  },
+  "rated_joint_speed_rad_s": [
+   3.1416,
+   3.1416,
+   3.1416,
+   3.1416,
+   3.1416,
+   3.1416
+  ],
+  "T_tool0_tcp": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.2
+  ],
+  "T_tool0_ft": [
+   0.0,
+   1.0,
+   -0.0,
+   -0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "tcp_note": "planner TCP between the finger pads; the real robot's TCP setting must match it, or convert",
+  "ft_note": "URDF ft_frame (from ur_description); confirm it matches the RTDE wrench frame and reference point on the installed software before use"
+ },
+ "object": {
+  "name": "nut",
+  "shape": "ring",
+  "outer_radius_m": 0.01607878915922458,
+  "bore_radius_m": 0.010708034555016224,
+  "height_m": 0.015741639028601043,
+  "source": "two-view RGB silhouette fit (fit_ring_dims.py)",
+  "caliper_measured": null
+ },
+ "fixture": {
+  "rod_axis_xy": [
+   0.0857,
+   -0.6381
+  ],
+  "rod_radius_m": 0.0078,
+  "rod_tip_z_m": 0.1801,
+  "rod_base_z_m": 0.0943,
+  "spacers": {
+   "radius": 0.018,
+   "z0": 0.0457,
+   "z1": 0.0943,
+   "fit_iou": 0.814
+  },
+  "block": {
+   "size": [
+    0.104,
+    0.104,
+    0.0453
+   ],
+   "yaw": -1.42,
+   "z0": -0.020060718556759893,
+   "z1": 0.0252
+  },
+  "base": {
+   "radius": 0.0223,
+   "z0": 0.0252,
+   "z1": 0.0457
+  },
+  "table_z_m": -0.020060718556759893,
+  "source": "measure_bolt_stand.py (RGB)",
+  "caliper_measured": null,
+  "threaded": null,
+  "chamfer": null
+ },
+ "clearance": {
+  "radial_m": 0.00291,
+  "diametral_m": 0.00582,
+  "note": "from the RGB fits; replace with caliper measurements before any contact experiment"
+ },
+ "cameras": {
+  "front": {
+   "T_base_cam": [
+    -0.3432358910890777,
+    0.6224706662450789,
+    -0.6174656745007937,
+    0.33683161007538204,
+    -0.6030671011311933,
+    -0.5517737199013566,
+    0.6396672552326507
+   ],
+   "real": {
+    "K": [
+     [
+      646.0843505859375,
+      0,
+      663.2056274414062
+     ],
+     [
+      0,
+      645.0760498046875,
+      374.1604309082031
+     ],
+     [
+      0,
+      0,
+      1
+     ]
+    ],
+    "width": 1280,
+    "height": 720,
+    "distortion": [
+     -0.05255172774195671,
+     0.06366012245416641,
+     -0.00010058125189971179,
+     0.0012735885102301836,
+     -0.020744161680340767
+    ]
+   },
+   "rendered": {
+    "K": [
+     [
+      645.4254,
+      0.0,
+      656.343
+     ],
+     [
+      0.0,
+      644.3745,
+      368.64
+     ],
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ],
+    "width": 1280,
+    "height": 720,
+    "distortion": null
+   }
+  },
+  "right": {
+   "T_base_cam": [
+    -0.5228056552322229,
+    0.8524450537818813,
+    0.003134914527809329,
+    0.0013599451881411314,
+    0.18153442186657828,
+    -1.268819385125392,
+    0.580600956614028
+   ],
+   "real": {
+    "K": [
+     [
+      644.766357421875,
+      0,
+      649.4802856445312
+     ],
+     [
+      0,
+      643.6728515625,
+      363.1194763183594
+     ],
+     [
+      0,
+      0,
+      1
+     ]
+    ],
+    "width": 1280,
+    "height": 720,
+    "distortion": [
+     -0.05478585511445999,
+     0.06260664761066437,
+     -0.00030384212732315063,
+     0.0003872587694786489,
+     -0.019466735422611237
+    ]
+   },
+   "rendered": {
+    "K": [
+     [
+      645.4254,
+      0.0,
+      656.343
+     ],
+     [
+      0.0,
+      644.3745,
+      368.64
+     ],
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ],
+    "width": 1280,
+    "height": 720,
+    "distortion": null
+   }
+  }
+ },
+ "sources": {
+  "outputs/ur_nut/scene.json": "f47f65692ab87584",
+  "outputs/ur_nut/nut_dims.json": "3f459faf94c029ee",
+  "outputs/ur_nut/traj_ep4_place_clean.json": "04154b806b2b59d1",
+  "data/camera_poses/ur_realsense_front_right.h5": "3aefe2edd0ac3035",
+  "data/camera_poses/ur_realsense_intrinsics.json": "cacdf4548fbcea08",
+  "data/ur5e_robotiq/ur5e_robotiq85_ik.urdf": "caa1bcb06918eb78"
+ },
+ "code_revision": "0ac79eb+uncommitted",
+ "trajectories": [
+  {
+   "name": "nut_nominal_000",
+   "kind": "nominal",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/replay/successes/env_0_2026_11_07_18_27_14",
+   "plan": {
+    "episode": 0,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 210.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0594,
+    -0.7995
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.001,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 2.976,
+    "peak_joint_speed_by_phase": {
+     "approach": 2.976,
+     "close": 0.0,
+     "carry": 1.505,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 0,
+    "time_scale_for_limit": 1.0
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_000",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_27_56",
+   "plan": {
+    "episode": 0,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 330.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0496,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0801,
+    -0.8187
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 6.687,
+    "peak_joint_speed_by_phase": {
+     "approach": 6.687,
+     "close": 0.0,
+     "carry": 1.65,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 14,
+    "time_scale_for_limit": 2.129
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_001",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_28_08",
+   "plan": {
+    "episode": 1,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 120.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0911,
+    -0.8062
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 3.222,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.222,
+     "close": 0.0,
+     "carry": 2.798,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 3,
+    "time_scale_for_limit": 1.025
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_002",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_28_19",
+   "plan": {
+    "episode": 2,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 270.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0346,
+    -0.8315
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.01,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 3.635,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.146,
+     "close": 0.0,
+     "carry": 3.635,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 22,
+    "time_scale_for_limit": 1.157
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_003",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_28_30",
+   "plan": {
+    "episode": 3,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 120.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0581,
+    -0.8328
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.021,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.021,
+     "close": 0.0,
+     "carry": 3.361,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 19,
+    "time_scale_for_limit": 1.28
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_004",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_28_42",
+   "plan": {
+    "episode": 4,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 330.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0702,
+    -0.7617
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.003,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.003,
+     "close": 0.0,
+     "carry": 1.506,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 11,
+    "time_scale_for_limit": 1.593
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_005",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_28_53",
+   "plan": {
+    "episode": 5,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 120.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0706,
+    -0.7606
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 2.779,
+    "peak_joint_speed_by_phase": {
+     "approach": 2.569,
+     "close": 0.0,
+     "carry": 2.779,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 0,
+    "time_scale_for_limit": 1.0
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_006",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_29_04",
+   "plan": {
+    "episode": 6,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 150.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0904,
+    -0.8285
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 3.421,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.421,
+     "close": 0.0,
+     "carry": 1.73,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 5,
+    "time_scale_for_limit": 1.089
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_007",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_29_16",
+   "plan": {
+    "episode": 7,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 180.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0496,
+    -0.839
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 3.599,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.599,
+     "close": 0.0,
+     "carry": 1.778,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 5,
+    "time_scale_for_limit": 1.146
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_008",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_29_27",
+   "plan": {
+    "episode": 8,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 120.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0752,
+    -0.838
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.01,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.405,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.405,
+     "close": 0.0,
+     "carry": 3.996,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 39,
+    "time_scale_for_limit": 1.72
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_009",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_29_39",
+   "plan": {
+    "episode": 9,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 330.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.067,
+    -0.7903
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.21,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.21,
+     "close": 0.0,
+     "carry": 1.499,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 11,
+    "time_scale_for_limit": 1.658
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_010",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_29_50",
+   "plan": {
+    "episode": 10,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 90.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0554,
+    -0.7798
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 3.943,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.897,
+     "close": 0.0,
+     "carry": 3.943,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 32,
+    "time_scale_for_limit": 1.255
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_011",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_0_2026_11_20_18_30_01",
+   "plan": {
+    "episode": 11,
+    "env": 0,
+    "status": "ok",
+    "grasp_azimuth_deg": 120.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0485,
+    -0.8382
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 3.563,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.563,
+     "close": 0.0,
+     "carry": 2.419,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 5,
+    "time_scale_for_limit": 1.134
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_012",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_27_56",
+   "plan": {
+    "episode": 0,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 0.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0865,
+    -0.7671
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.073,
+    "unwrapped_joints": [
+     "wrist_3_joint"
+    ],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.085,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.085,
+     "close": 0.0,
+     "carry": 2.229,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 8,
+    "time_scale_for_limit": 1.3
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_013",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_28_08",
+   "plan": {
+    "episode": 1,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 0.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0444,
+    -0.7624
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.073,
+    "unwrapped_joints": [
+     "wrist_3_joint"
+    ],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 3.396,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.396,
+     "close": 0.0,
+     "carry": 2.448,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 5,
+    "time_scale_for_limit": 1.081
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_014",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_28_19",
+   "plan": {
+    "episode": 2,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 30.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0407,
+    -0.7635
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 6.617,
+    "peak_joint_speed_by_phase": {
+     "approach": 6.617,
+     "close": 0.0,
+     "carry": 1.495,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 14,
+    "time_scale_for_limit": 2.106
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_015",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_28_30",
+   "plan": {
+    "episode": 3,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 180.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0985,
+    -0.8366
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 3.709,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.709,
+     "close": 0.0,
+     "carry": 1.798,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 6,
+    "time_scale_for_limit": 1.181
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_016",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_28_42",
+   "plan": {
+    "episode": 4,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 90.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0919,
+    -0.7926
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.158,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.158,
+     "close": 0.0,
+     "carry": 4.147,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 36,
+    "time_scale_for_limit": 1.324
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_017",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_28_53",
+   "plan": {
+    "episode": 5,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 210.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0618,
+    -0.813
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 3.286,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.286,
+     "close": 0.0,
+     "carry": 1.598,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 3,
+    "time_scale_for_limit": 1.046
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_018",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_29_04",
+   "plan": {
+    "episode": 6,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 180.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0449,
+    -0.7772
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 2.683,
+    "peak_joint_speed_by_phase": {
+     "approach": 2.683,
+     "close": 0.0,
+     "carry": 1.43,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 0,
+    "time_scale_for_limit": 1.0
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_019",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_29_16",
+   "plan": {
+    "episode": 7,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 150.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0854,
+    -0.7598
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 2.401,
+    "peak_joint_speed_by_phase": {
+     "approach": 2.401,
+     "close": 0.0,
+     "carry": 1.564,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 0,
+    "time_scale_for_limit": 1.0
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_020",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_29_27",
+   "plan": {
+    "episode": 8,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 0.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0449,
+    -0.8022
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.073,
+    "unwrapped_joints": [
+     "wrist_3_joint"
+    ],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.295,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.295,
+     "close": 0.0,
+     "carry": 1.59,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 12,
+    "time_scale_for_limit": 1.685
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_021",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_29_39",
+   "plan": {
+    "episode": 9,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 330.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0384,
+    -0.7793
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 6.583,
+    "peak_joint_speed_by_phase": {
+     "approach": 6.583,
+     "close": 0.0,
+     "carry": 1.419,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 13,
+    "time_scale_for_limit": 2.095
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_022",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_29_50",
+   "plan": {
+    "episode": 10,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 210.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0704,
+    -0.7751
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.804,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.804,
+     "close": 0.0,
+     "carry": 3.374,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 24,
+    "time_scale_for_limit": 1.529
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_023",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_1_2026_11_20_18_30_01",
+   "plan": {
+    "episode": 11,
+    "env": 1,
+    "status": "ok",
+    "grasp_azimuth_deg": 0.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0627,
+    -0.7809
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.073,
+    "unwrapped_joints": [
+     "wrist_3_joint"
+    ],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 3.715,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.715,
+     "close": 0.0,
+     "carry": 2.338,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 7,
+    "time_scale_for_limit": 1.183
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_024",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_27_56",
+   "plan": {
+    "episode": 0,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 210.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0435,
+    -0.7745
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.024,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.024,
+     "close": 0.0,
+     "carry": 3.426,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 28,
+    "time_scale_for_limit": 1.599
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_025",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_28_08",
+   "plan": {
+    "episode": 1,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 0.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0832,
+    -0.8003
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.073,
+    "unwrapped_joints": [
+     "wrist_3_joint"
+    ],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.869,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.869,
+     "close": 0.0,
+     "carry": 1.529,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 12,
+    "time_scale_for_limit": 1.868
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_026",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_28_19",
+   "plan": {
+    "episode": 2,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 30.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.033,
+    -0.8309
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.556,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.556,
+     "close": 0.0,
+     "carry": 1.711,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 12,
+    "time_scale_for_limit": 1.768
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_027",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_28_30",
+   "plan": {
+    "episode": 3,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 0.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0647,
+    -0.7855
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.073,
+    "unwrapped_joints": [
+     "wrist_3_joint"
+    ],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.491,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.491,
+     "close": 0.0,
+     "carry": 1.993,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 10,
+    "time_scale_for_limit": 1.43
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_028",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_28_42",
+   "plan": {
+    "episode": 4,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 330.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0947,
+    -0.8166
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.01,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 6.256,
+    "peak_joint_speed_by_phase": {
+     "approach": 6.256,
+     "close": 0.0,
+     "carry": 1.649,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 13,
+    "time_scale_for_limit": 1.991
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_029",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_28_53",
+   "plan": {
+    "episode": 5,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 120.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0637,
+    -0.821
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.991,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.991,
+     "close": 0.0,
+     "carry": 3.811,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 36,
+    "time_scale_for_limit": 1.589
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_030",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_29_04",
+   "plan": {
+    "episode": 6,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 0.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0566,
+    -0.7932
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.073,
+    "unwrapped_joints": [
+     "wrist_3_joint"
+    ],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.912,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.912,
+     "close": 0.0,
+     "carry": 1.465,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 12,
+    "time_scale_for_limit": 1.882
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_031",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_29_16",
+   "plan": {
+    "episode": 7,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 150.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0967,
+    -0.8389
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 3.653,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.653,
+     "close": 0.0,
+     "carry": 1.814,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 6,
+    "time_scale_for_limit": 1.163
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_032",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_29_27",
+   "plan": {
+    "episode": 8,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 330.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0264,
+    -0.8251
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.01,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.758,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.758,
+     "close": 0.0,
+     "carry": 1.667,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 13,
+    "time_scale_for_limit": 1.833
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_033",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_29_39",
+   "plan": {
+    "episode": 9,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 330.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0986,
+    -0.7774
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.879,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.879,
+     "close": 0.0,
+     "carry": 1.448,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 12,
+    "time_scale_for_limit": 1.871
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_034",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_29_50",
+   "plan": {
+    "episode": 10,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 180.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0908,
+    -0.8238
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.636,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.636,
+     "close": 0.0,
+     "carry": 2.706,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 11,
+    "time_scale_for_limit": 1.476
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_035",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_2_2026_11_20_18_30_01",
+   "plan": {
+    "episode": 11,
+    "env": 2,
+    "status": "ok",
+    "grasp_azimuth_deg": 120.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0604,
+    -0.7961
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.957,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.957,
+     "close": 0.0,
+     "carry": 4.238,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 37,
+    "time_scale_for_limit": 1.896
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_036",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_27_56",
+   "plan": {
+    "episode": 0,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 0.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0893,
+    -0.7978
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.073,
+    "unwrapped_joints": [
+     "wrist_3_joint"
+    ],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.981,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.981,
+     "close": 0.0,
+     "carry": 1.518,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 12,
+    "time_scale_for_limit": 1.904
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_037",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_28_08",
+   "plan": {
+    "episode": 1,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 90.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0923,
+    -0.7701
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.058,
+    "peak_joint_speed_by_phase": {
+     "approach": 3.913,
+     "close": 0.0,
+     "carry": 4.058,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 32,
+    "time_scale_for_limit": 1.292
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_038",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_28_19",
+   "plan": {
+    "episode": 2,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 0.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0858,
+    -0.796
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.073,
+    "unwrapped_joints": [
+     "wrist_3_joint"
+    ],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 6.245,
+    "peak_joint_speed_by_phase": {
+     "approach": 6.245,
+     "close": 0.0,
+     "carry": 1.503,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 12,
+    "time_scale_for_limit": 1.988
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_039",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_28_30",
+   "plan": {
+    "episode": 3,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 180.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0303,
+    -0.7887
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.168,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.168,
+     "close": 0.0,
+     "carry": 2.371,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 9,
+    "time_scale_for_limit": 1.327
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_040",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_28_42",
+   "plan": {
+    "episode": 4,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 90.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0208,
+    -0.7627
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.115,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.115,
+     "close": 0.0,
+     "carry": 3.959,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 33,
+    "time_scale_for_limit": 1.31
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_041",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_28_53",
+   "plan": {
+    "episode": 5,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 180.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0896,
+    -0.7829
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.969,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.969,
+     "close": 0.0,
+     "carry": 2.887,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 12,
+    "time_scale_for_limit": 1.582
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_042",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_29_04",
+   "plan": {
+    "episode": 6,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 60.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0251,
+    -0.8197
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 6.879,
+    "peak_joint_speed_by_phase": {
+     "approach": 6.879,
+     "close": 0.0,
+     "carry": 1.628,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 14,
+    "time_scale_for_limit": 2.19
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_043",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_29_16",
+   "plan": {
+    "episode": 7,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 330.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0426,
+    -0.8361
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.681,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.681,
+     "close": 0.0,
+     "carry": 1.754,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 13,
+    "time_scale_for_limit": 1.808
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_044",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_29_27",
+   "plan": {
+    "episode": 8,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 210.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.09,
+    -0.7769
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.298,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.298,
+     "close": 0.0,
+     "carry": 3.163,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 11,
+    "time_scale_for_limit": 1.368
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_045",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_29_39",
+   "plan": {
+    "episode": 9,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 0.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0859,
+    -0.8362
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.073,
+    "unwrapped_joints": [
+     "wrist_3_joint"
+    ],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.039,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.039,
+     "close": 0.0,
+     "carry": 1.797,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 14,
+    "time_scale_for_limit": 1.604
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_046",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_29_50",
+   "plan": {
+    "episode": 10,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 0.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0694,
+    -0.7624
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.073,
+    "unwrapped_joints": [
+     "wrist_3_joint"
+    ],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 4.642,
+    "peak_joint_speed_by_phase": {
+     "approach": 4.642,
+     "close": 0.0,
+     "carry": 1.945,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 10,
+    "time_scale_for_limit": 1.478
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  },
+  {
+   "name": "nut_generated_047",
+   "kind": "generated",
+   "steps": 105,
+   "duration_s": 3.5,
+   "phase_steps": {
+    "approach": 30,
+    "close": 8,
+    "carry": 45,
+    "release": 8,
+    "retreat": 14
+   },
+   "source": "output_data/nut/r2r2r/successes/env_3_2026_11_20_18_30_01",
+   "plan": {
+    "episode": 11,
+    "env": 3,
+    "status": "ok",
+    "grasp_azimuth_deg": 330.0,
+    "fixture_clearance_m": 0.0054,
+    "table_clearance_m": 0.0497,
+    "fingertip_clearance_m": 0.0021
+   },
+   "start_xy": [
+    -0.0739,
+    -0.8302
+   ],
+   "checks": {
+    "fk_vs_logged_flange_mm": 0.009,
+    "fk_vs_logged_flange_deg": 0.0,
+    "grasp_drift_over_carry_mm": 0.001,
+    "unwrapped_joints": [],
+    "within_joint_limits": true,
+    "peak_joint_speed_rad_s": 5.725,
+    "peak_joint_speed_by_phase": {
+     "approach": 5.725,
+     "close": 0.0,
+     "carry": 1.728,
+     "release": 0.0,
+     "retreat": 0.858
+    },
+    "steps_over_joint_speed_limit": 13,
+    "time_scale_for_limit": 1.822
+   },
+   "insertion": {
+    "first_step_rod_in_hole": 76,
+    "steps_rod_in_hole_while_held": 7,
+    "max_descent_speed_in_hole_m_s": 0.1189,
+    "depth_at_release_m": 0.0208,
+    "radial_offset_at_release_mm": 0.0,
+    "max_radial_offset_in_hole_mm": 0.0,
+    "max_tilt_in_hole_deg": 0.0
+   }
+  }
+ ]
+}
