@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Simulation runs with the provisional measured parameters (outputs/ur_nut/contact/measured.json:
+# Simulation runs with the measured parameters (outputs/ur_nut/contact/measured.json:
 # fin-ray grasp, measured grip ring_bottom_below_flange 0.225, rod 16 mm, ring 8 g). Training at
 # 0.5 mm radial clearance (bore unmeasured; the RGB fit says 2.7 mm), evaluation at 0.5 / 1.0 / 2.7.
 # Everything here is simulation.

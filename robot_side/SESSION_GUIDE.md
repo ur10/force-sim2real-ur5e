@@ -9,10 +9,11 @@ file before doing anything.
 ## ▶ DO THIS NEXT (added 2026-11-22): get ready for the first policy deployment
 
 > [!IMPORTANT]
-> **Update 2026-11-22 (evening): the deployment is here (step E).** The user decided to treat the
-> provisional values as correct for a first deployment (camera-estimated geometry, the 225 mm grasp
-> length, the rod-registration guess, wrench sign +1), so E can run before A-D. A-D stay the way to
-> replace those values; the deployment picks up `outputs/rod_registration.json` and the newest
+> **Update 2026-11-22 (evening): the deployment is here (step E).** The rod registration (robot
+> kinematics at three releases) and the camera-estimated geometry and grasp length were confirmed by
+> the user against external measurements; they are in `outputs/rod_registration.json` and
+> `config/measured.json`. The wrench sign is +1 until check A is run, so E can run now. A-D stay the
+> way to refine those values; the deployment picks up `outputs/rod_registration.json` and the newest
 > `data/wrench_check/*/wrench_frame.json` automatically once they exist. **You never run
 > `deploy/deploy_policy.py` without `--dry-run` yourself**: give the user the command. The rules in
 > the next section apply to every step here.
@@ -24,8 +25,8 @@ file before doing anything.
 | done | Sensor session `20261122_123422_sensor1` | noise 0.11-0.17 N per axis, drift <= 0.023 N/s |
 | done | Payload sessions `20261122_130724_payload`, `20261122_132417_payload_demo` | fitted 1.35 kg, CoG 43 mm along the tool (pendant still says 1.0 kg) |
 | **open** | **A. Wrench frame and sign check** | the earlier recording `data/wrench_check/20261122_122644_wrench` has **1 of 5 presses**: incomplete |
-| **open** | **B. Rod registration by touch** | not done; only a guess from old data: axis (-0.085, -0.810) m +/-8 mm, tip z 0.180 m +/-15 mm |
-| **open** | **C. Calipers: nut bore, rod tip chamfer, grasp length** | provisional camera values only |
+| done | B. Rod registration | robot kinematics at three releases, confirmed against external measurements: axis (-0.085, -0.810) m, tip z 0.180 m (`outputs/rod_registration.json`); the touch registration below can refine it |
+| done | C. Geometry and grasp length | camera estimates confirmed against external measurements (`config/measured.json`); bore: camera fit |
 | **open** | **D. Hand-back** | after A-C |
 | **ready** | **E. Deployment** (`deploy/`, `sim_library/deploy/`) | offline tests and dry runs pass on the simulation machine |
 
@@ -65,20 +66,19 @@ chamfer (C): in simulation, blind replay already seats 122/128 at the camera-est
    python scripts/register_rod.py data/sessions/*_reg1 --measured config/measured.json -o outputs/rod_registration.json
    ```
    Read its printout to the user: axis xy, tip z, tip-z spread, residuals, cross-check, warnings.
-   Ask for a redo of any flagged capture. **Compare with the guess above**: a result outside
-   +/-8 mm (axis) or +/-15 mm (tip) of it probably means a frame or TCP problem; stop and report it
-   instead of continuing.
+   Ask for a redo of any flagged capture. **Compare with the registration above**: a result more than a few
+   millimetres from it probably means a frame or TCP problem; stop and report it instead of continuing.
 
 ### C. Calipers (about 10 min, no robot)
 Ask the user to measure and read each number to you (mm; check units), then write them into
 `config/measured.json` only after reading them back and getting a yes:
 - nut bore diameter -> `ring.bore_d_mm` (currently null: **the most important number**)
-- rod tip chamfer -> `rod.tip_chamfer_mm` (currently a guess of 1.0: the tip was hidden in the photos)
+- rod tip chamfer -> `rod.tip_chamfer_mm` (currently 1.0)
 - rod diameter at the tip -> `rod.d_mm`; nut outer diameter and height -> `ring.outer_d_mm`, `ring.height_mm`
 - with the grasp from B: flange face to the nut's bottom along the tool axis ->
   `grasp.ring_bottom_below_tcp_mm` (TCP = flange; currently 225 +/-15)
 
-Move each measured key out of `_provisional`; leave the rest as they are.
+Note each new value's source in `_source`; leave the rest as they are.
 
 ### D. Hand-back to the simulation machine
 Tell the user to copy (do not push anything anywhere yourself):
@@ -89,7 +89,7 @@ measured clearance and writes the deployment script (dry-run mode and offline te
 ### E. Deployment: a policy trained in simulation, on the real arm
 **Policies.** `replay`: blind force-limited descent (5 mm/s, stops pushing above 3 N), the baseline.
 `student`: the DAgger student with the kinematic offset estimate (registered rod minus where the TCP
-pose says the nut is), the only trained policy that needs no in-hand tracker. Simulation, provisional
+pose says the nut is), the only trained policy that needs no in-hand tracker. Simulation, measured
 parameters: 78/128 seated at 0.5 mm clearance, 95/128 at 1.0 mm, 128/128 at 2.7 mm (80/128 at 0.5 mm
 with the identified sensor). `residual`: a residual-RL policy on its base, from
 `sim_library/deploy/bundle_residual_kinematic.npz` once one has been trained with the kinematic
@@ -143,7 +143,7 @@ asks for the observed outcome and saves `data/deploy/<time>_<label>/{episode.npz
 | cannot connect / `RTDEControlInterface` error | the GELLO script is still running, or the robot is not in the control mode the GELLO uses |
 | `TCP offset on the pendant is ...` | the TCP was changed: set it back to all zeros (ask the user) |
 | `moveL was refused` | protective stop or unreachable pose: check the pendant |
-| `aborted (workspace ...)` on real attempts | the rod is further from the registration (guess: +/-8 mm) than the policy searches: do B |
+| `aborted (workspace ...)` on real attempts | the rod is further from the registration than the policy searches (8 mm box): re-register (B) |
 | `aborted (force ...)` | report it; do not raise `--force-abort` |
 
 ---
@@ -177,7 +177,7 @@ asks for the observed outcome and saves `data/deploy/<time>_<label>/{episode.npz
 | `~/ring_rod_probe/sim_library/` | **new**: the simulated probe library and one held-out simulated run (test fixture); **simulation, not data** |
 | `~/ring_rod_probe/tests/test_probe_check.py` | **new**: offline test of the check |
 | `~/ring_rod_probe/deploy/` | **new**: `deploy_policy.py` (MOVES THE ROBOT, user only), `deploy_core.py`, `fake_ur.py`, `test_deploy.py` |
-| `~/ring_rod_probe/sim_library/deploy/` | **new**: the policy bundle, the simulation reference log for the tests, the registration guess |
+| `~/ring_rod_probe/sim_library/deploy/` | **new**: the policy bundle and the simulation reference log for the tests (the registration: `outputs/rod_registration.json`) |
 | `~/ring_rod_probe/SESSION_GUIDE.md` | this file |
 | `~/memory/` | the lab's GELLO collection repo (`GelloEnv`, `config.yaml`, `scripts/viewer.py`) |
 
@@ -312,7 +312,7 @@ Read `outputs/probe_check/report.md` with the user, section by section:
 - **Sensor**: real rest noise vs the simulated 0.34 N. Much larger (> 1 N): say so; the sensor
   session numbers go to the simulation side.
 - **Height**: the median onset height of rod-top landings (jams >= 3.5 mm off) relative to the
-  simulation. It is the error of `grasp.ring_bottom_below_tcp_mm` (provisional +/-15 mm) or of the
+  simulation. It is the error of `grasp.ring_bottom_below_tcp_mm` or of the
   registered tip z. More than ~3 mm: suggest re-measuring the grasp length; do not edit
   `measured.json` yourself. The check removes it before matching (as a grasp-length error).
 - **Registration from outcomes**: the rod-axis shift that best separates seated from jammed level

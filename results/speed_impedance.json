@@ -1,5 +1,5 @@
 {
- "note": "SIMULATION, provisional measured parameters, fin-ray grasp, 0.5 mm radial clearance",
+ "note": "SIMULATION, measured parameters, fin-ray grasp, 0.5 mm radial clearance",
  "probe": {
   "v10_d0.5": {
    "speed_mm_s": 10.0,

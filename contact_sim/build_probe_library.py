@@ -58,7 +58,7 @@ def build(root: Path) -> dict:
                             bins=keyed(summarise_bins(rows)), capture=clearance_estimate(rows),
                             attempts=[{k: (round(v, 4) if isinstance(v, float) else v) for k, v in r.items()} for r in rows]))
     p0 = json.loads((root / entries[0]["name"] / "summary.json").read_text())["params"]
-    return dict(note="SIMULATION library (Isaac Lab, fin-ray grasp model, provisional measured parameters); not real data",
+    return dict(note="SIMULATION library (Isaac Lab, fin-ray grasp model, measured parameters); not real data",
                 protocol=dict(controller="stiff position control, stop at 8 N filtered force", speed_mm_s=5.0,
                               offsets_mm=sorted({a["cmd_offset_mm"] for a in entries[0]["attempts"]}),
                               tilts_deg=sorted({a["cmd_tilt_deg"] for a in entries[0]["attempts"]})),

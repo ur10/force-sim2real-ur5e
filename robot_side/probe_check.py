@@ -207,7 +207,7 @@ def fmt(x, nd=2):
 def markdown(r: dict) -> str:
     L = ["# Probe check: real export vs simulated library", "",
          f"Export `{r['export']}`: {r['n_attempts']} attempts, outcomes {r['outcomes']}, flags {r['flags'] or 'none'}.",
-         "The library is **simulation** (Isaac Lab, fin-ray grasp model, provisional measurements).", "",
+         "The library is **simulation** (Isaac Lab, fin-ray grasp model, measured parameters).", "",
          "## Sensor", "",
          f"Force noise at rest (median std of |F - F_rest|): real {fmt(r['sensor']['rest_force_std_n_median'])} N, "
          f"simulated {fmt(r['sensor']['sim_rest_std_n_median'])} N (sim noise parameter {r['sensor']['sim_force_noise_n']} N per axis).", "",

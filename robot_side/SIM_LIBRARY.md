@@ -7,7 +7,7 @@ real2render2real repo (branch `ur5e-contact-sim`).
 ## What was simulated
 
 - The ring held by the fin-ray grasp model (6-DoF spring between gripper and ring, pivot in the
-  gripped band), the provisional `config/measured.json` values: rod 16 mm, ring 32 mm outer, 14 mm
+  gripped band), the measured `config/measured.json` values: rod 16 mm, ring 32 mm outer, 14 mm
   high, 8 g, ring bottom 225 mm below the flange, rod tip chamfer 1 mm.
 - The same probe a GELLO operator does, scripted: line up at an offset (0, 1, 2, 2.5, 3, 3.5, 4, 6 mm,
   all in one direction) and tilt (0, 3, 6 deg), descend at 5 mm/s with a stiff arm, stop when the

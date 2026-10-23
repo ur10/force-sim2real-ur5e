@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Trimmed replacement for the rest of queue.sh + queue2.sh + queue3.sh (2026-11-22, to finish in
 # about 2.25 h): residuals 40 min each (same budget for both bases), final checkpoints only, no
-# wrench-only expert at other clearances, no duplicate baselines. Simulation, provisional parameters.
+# wrench-only expert at other clearances, no duplicate baselines. Simulation, measured parameters.
 set -u
 cd "${R2R:?set R2R to the real2render2real checkout}"
 Q=outputs/ur_nut/measured

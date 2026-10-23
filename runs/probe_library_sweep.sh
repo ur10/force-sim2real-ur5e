@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Simulated probe library for the offline check: GELLO-like stiff descent with a force stop,
-# fin-ray grasp, provisional measurements; clearance x grip stiffness x friction.
+# fin-ray grasp, measured parameters; clearance x grip stiffness x friction.
 set -u
 cd "${R2R:?set R2R to the real2render2real checkout}"
 O=outputs/ur_nut/probe_library

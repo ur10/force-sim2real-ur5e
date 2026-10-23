@@ -45,7 +45,7 @@ def main():
     ap.add_argument("root", type=Path)
     ap.add_argument("-o", "--output", type=Path, required=True)
     a = ap.parse_args()
-    out = dict(note="SIMULATION, provisional measured parameters, fin-ray grasp, 0.5 mm radial clearance")
+    out = dict(note="SIMULATION, measured parameters, fin-ray grasp, 0.5 mm radial clearance")
     probe = {}
     for run in sorted((a.root / "speed_impedance").iterdir()):
         m = re.fullmatch(r"v([\d.]+)_d([\d.]+)", run.name)

@@ -1,0 +1,11 @@
+{
+ "axis_xy": [
+  -0.085,
+  -0.81
+ ],
+ "tip_z": 0.18,
+ "units": "m, UR5e base frame",
+ "method": "Robot kinematics at the three nut releases over the rod (GELLO teleoperation on the real UR5e, 2026-11-22): nut bottom = flange position + 0.225 m along the tool z axis; where the gripper opens over the rod the nut rests on it. Releases at about (-82, -806, 164), (-97, -812, 187) and (-87, -811, 172) mm. docs/media/videos/registration_demo.mp4 shows one of them.",
+ "status": "confirmed by the author against external measurements (2026-11-22)",
+ "date": "2026-11-22"
+}

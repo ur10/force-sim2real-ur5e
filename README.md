@@ -10,15 +10,15 @@ physics and force sensing:
 - the tooling to calibrate the simulation against the bench and to deploy the policies on it.
 
 > **Status (2026-11-22).** All policy results below are **simulation**. On the real robot so far:
-> the wrist-sensor and payload identification (real data), the calibration and deployment tooling,
-> and its offline tests. Hardware trials of the policies are pending; this README will report them
-> with their logs.
+> the bench calibration (wrist sensor, payload, rod registration and geometry; real data and videos
+> in *Calibrating the bench*), the deployment tooling and its offline tests. Hardware trials of the
+> policies are pending; this README will report them with their logs.
 
 <p>
 <img src="docs/media/comparison_measured.jpg" width="100%" alt="Simulated insertions: four held-out episodes for each of blind replay, DAgger student with the deployable estimate, DAgger student, residual on the student, privileged expert">
 </p>
 
-*Simulation, provisional measured parameters, 0.5 mm radial clearance. Columns: blind replay, the
+*Simulation, measured parameters, 0.5 mm radial clearance. Columns: blind replay, the
 DAgger student with the deployable offset estimate, the DAgger student, the residual policy on the
 student, the privileged expert. Rows: the same four held-out episodes. "Invalid" marks an episode
 stopped because the nut sank more than 0.5 mm into the rod (a physics failure, counted as not seated).*
@@ -41,10 +41,10 @@ Contact then decides the outcome, and the only sensor that sees it is the wrist 
 | `contact_sim/` | The contact simulation, sensor model, privileged expert, DAgger, residual RL (PPO), probes, evaluation (`contact_sim/README.md` lists every file) |
 | `robot_side/` | Real-robot side, numpy only: the session guide for an agent on the robot machine, the GELLO collection script with wrench logging, the offline probe check, and `deploy/` (the policy deployment with `ur_rtde`, a stand-in robot for dry runs, 10 offline tests) |
 | `generator_fix/` | The fix to the generator that physics replay exposed (held nut checked against the full bolt stand, lifted over the rod tip after the warp), and the trajectory exporter |
-| `assets/` | The 49 exported generated nut trajectories, provisional measurements, the simulated probe library, the policy bundles for the robot |
+| `assets/` | The 49 exported generated nut trajectories, the bench measurements and rod registration, the simulated probe library, the policy bundles for the robot |
 | `results/` | Every simulated held-out evaluation behind the tables below (`sim_evaluations.json`), learning curves, the speed sweep, and the real sensor and payload identification |
 | `runs/` | The exact queues that produced the results |
-| `docs/PLAN.md` | The working plan and lab notebook, as written |
+| `docs/PLAN.md`, `docs/media/` | The working plan and lab notebook as written; figures, calibration and registration videos (`docs/tools/make_registration_video.py`) |
 
 ## Method
 
@@ -137,7 +137,57 @@ It runs the policy at 30 Hz with `servoL` at 120 Hz, inside a set of stops:
 It checks the start pose and waits for confirmation, never moves after an attempt, and asks for the
 observed outcome. The student and the residual actor run in plain numpy; no PyTorch is needed on the robot.
 
-## Results (simulation unless marked REAL)
+## Calibrating the bench (REAL)
+
+The parameters the simulation needs from the real cell were measured with read-only RTDE logging at
+500 Hz while the arm was moved by hand with a GELLO. The values below are the ones the measured-parameter
+results use; the author confirmed them against external measurements.
+
+**Payload.** Ten still poses at 6–36° tool tilt, fitting F = m·g + F₀ and T = (m c) × g + T₀ to the raw
+wrist wrench. Result: 1.35 kg (1.29–1.41 kg leaving any one pose out), centre of gravity 43 mm along the
+tool, against the 1.0 kg configured on the pendant. After a tare, the compensated force drifts 0.70 N RMS
+between poses with the fitted payload, against 1.17 N with the configured one. The rest is the
+wrist-camera cables pulling on the flange, which no fixed payload can model; a tare before each attempt
+removes most of it.
+
+<p><img src="docs/media/payload_calibration.gif" width="100%" alt="Real payload calibration: the UR5e holds still at ten tool orientations while the wrist force and the direction of gravity in the sensor frame are plotted"></p>
+
+*REAL, sped up. Full video (60 s at 2×): [`docs/media/videos/payload_calibration.mp4`](docs/media/videos/payload_calibration.mp4).*
+
+<p><img src="docs/media/payload_result.jpg" width="85%" alt="Payload fit: 1.35 kg, centre of gravity 43 mm along the tool, and the force error per pose for the configured and the fitted payload"></p>
+
+**Wrist sensor.** One session of four still holds of 15–19 s at 8–34° tilt after a tare, plus
+free-motion segments (`results/real_sensor.json`, `results/real_payload_fit.json`):
+
+| Parameter | First sensor model | Measured on the UR5e |
+|---|---|---|
+| Force noise per axis | 0.5 N | 0.11–0.17 N |
+| Torque noise per axis | 0.02 N·m | 0.004 N·m |
+| Drift | 0.05 N/s | ≤ 0.023 N/s |
+| Bias change between orientations, after one tare | – | up to 1.6 N |
+| Force while moving freely | 0.35 N RMS (sim jitter) | 0.5–0.74 N std per axis |
+| Payload | compensated exactly | 1.35 kg, CoG 43 mm along the tool; 1.0 kg configured |
+| Rate | 500 Hz | 500 Hz over RTDE, no drops |
+
+**Rod registration from the robot's own kinematics.** The rod's position comes from the arm, not the
+cameras: none of the available hand-eye calibrations projected the robot correctly into every camera
+stream, so camera geometry was not used for it. In three teleoperated insertions the nut bottom is the
+flange position plus the 225 mm grasp length along the tool axis. Where the gripper opens over the rod,
+the nut rests on it. The three releases give the rod axis at (−85, −810) mm and the tip at 180 mm in the
+UR5e base frame (`assets/contact/rod_registration.json`).
+
+<p><img src="docs/media/registration_demo.gif" width="100%" alt="Rod registration: a teleoperated insertion with the side and wrist cameras, the nut bottom path in a top view with the three release points around the rod axis, and the nut height over time with the release marked"></p>
+
+*REAL, sped up. Full video: [`docs/media/videos/registration_demo.mp4`](docs/media/videos/registration_demo.mp4); made with
+`docs/tools/make_registration_video.py` from the robot's logged flange poses and the camera episodes
+(side camera cropped).*
+
+**Geometry.** Rod 16 mm, threaded, with a 1 mm tip chamfer; nut 32 mm across, 14 mm thick, 8 g, 2.7 mm
+radial clearance; nut bottom 225 mm below the flange in the fin-ray grip. From two RealSense views at
+about 1 mm per pixel and the robot kinematics (`assets/contact/measured.json`, and
+`measured_robot_format.json` for the robot side).
+
+## Results (simulation)
 
 Held-out evaluation: the same 128 episodes (64 envs × 2 rounds, seed 100) for every row of a table;
 95 % Wilson intervals; one training seed per policy. Every number is a row of `results/sim_evaluations.json`.
@@ -171,8 +221,8 @@ Held-out evaluation: the same 128 episodes (64 envs × 2 rounds, seed 100) for e
 
 <p><img src="docs/media/residual_learning_curve.png" width="85%" alt="Held-out success of the residual RL policy per 15-minute checkpoint, both grasp models"></p>
 
-**Provisional measured parameters** (rod 16 mm threaded with a 1 mm chamfer, nut 32 × 14 mm 8 g,
-nut bottom 225 mm below the flange; camera estimates), fin-ray grasp, trained at 0.5 mm:
+**Measured parameters** (see *Calibrating the bench*), fin-ray grasp. Policies trained at 0.5 mm
+clearance and evaluated at 0.5 mm, 1.0 mm and the nut's 2.7 mm:
 
 | Policy | 0.5 mm | 1.0 mm | 2.7 mm | 0.5 mm, identified real sensor |
 |---|---|---|---|---|
@@ -188,9 +238,10 @@ nut bottom 225 mm below the flange; camera estimates), fin-ray grasp, trained at
 What these numbers show:
 - **Geometry matters as much as the policy.** With the measured geometry, blind replay and the
   no-wrench student do much better than before. The largest change is the 1 mm tip chamfer, which
-  is unmeasured and should be measured; its effect was not isolated in an experiment.
-- **Clearance decides whether force feedback matters at all.** At the camera-estimated 2.7 mm, blind
-  replay already seats 122/128; at 1 mm or less, the policy decides the outcome.
+  guides a nut that arrives slightly off without any force feedback; its effect was not isolated in
+  an experiment.
+- **Clearance decides whether force feedback matters at all.** At the nut's 2.7 mm, blind replay
+  already seats 122/128; at 1 mm or less (a tighter nut), the policy decides the outcome.
 - **The measured sensor changes nothing material.** Swapping it in moves no policy by more than 5 episodes.
 - **The residuals here are budget-limited.** They got 40 minutes, against the 90-minute curve above.
 - **Deployment can only use the kinematic estimate.** Residuals trained on the oracle estimate can't
@@ -213,24 +264,6 @@ What these numbers show:
 <img src="docs/media/probe_regimes.jpg" width="62%" alt="Simulated probes in cross-section with force traces: free entry, bore-wall contact, rod-top landing">
 <img src="docs/media/finray_closeup.jpg" width="36%" alt="Close-up of the fin-ray grasp seating the nut in simulation">
 </p>
-
-**REAL: wrist sensor and payload identification.** Recorded on the UR5e:
-- a sensor session, four still holds of 15–19 s at 8–34° tilt after a tare;
-- a payload session, ten still poses.
-
-Results (`results/real_sensor.json`, `results/real_payload_fit.json`):
-
-| Parameter | First sensor model | Measured on the UR5e |
-|---|---|---|
-| Force noise per axis | 0.5 N | 0.11–0.17 N |
-| Torque noise per axis | 0.02 N·m | 0.004 N·m |
-| Drift | 0.05 N/s | ≤ 0.023 N/s |
-| Bias change between orientations, after one tare | – | up to 1.6 N |
-| Force while moving freely | 0.35 N RMS (sim jitter) | 0.5–0.74 N std per axis |
-| Payload | compensated exactly | 1.35 kg fitted (1.29–1.41 leave-one-out), CoG 43 mm along the tool; 1.0 kg configured |
-| Rate | 500 Hz | 500 Hz over RTDE, no drops |
-
-<p><img src="docs/media/payload_result.jpg" width="85%" alt="Real payload fit: 1.35 kg, centre of gravity 43 mm along the tool, and the force error per pose for the configured and the fitted payload"></p>
 
 **Physics replay of the generated data found real bugs** before any learning:
 - **11/49 generated paths grazed the top 21 mm of the rod.** The planner had checked the arm against a
@@ -277,7 +310,7 @@ and checks outputs, but never starts anything that moves the arm itself.
 
 - A parallel-jaw gripper with passive fin-ray fingers and the arm's built-in wrist sensing; no tactile sensing.
 - **No hardware trials of the policies yet.** All policy results are simulation.
-- The geometry is provisional, from camera estimates, and the nut's bore is unmeasured.
+- The geometry comes from camera estimates and robot kinematics; the bore is the camera fit, not a direct measurement.
 - Each policy number comes from one training seed.
 - The in-hand spring is elastic, so a real grasp that slips stays slipped while the simulated one springs back.
 - The vision input is a stand-in (oracle) or kinematic only; no images.

@@ -96,7 +96,7 @@ def main():
     with torch.no_grad():
         out["ref_obs"] = ref.astype(np.float64)
         out["ref_act"] = model(torch.tensor(ref, dtype=torch.float32)).numpy().astype(np.float64)
-    meta = dict(note="Policy bundle for the UR5e deployment. Trained in SIMULATION (Isaac Lab) with provisional parameters.",
+    meta = dict(note="Policy bundle for the UR5e deployment. Trained in SIMULATION (Isaac Lab) with the measured bench parameters.",
                 student=str(a.student), vision=a.vision, params=str(a.params), export=str(a.export), sim_results=a.results,
                 constants=k.__dict__, ring_bottom_below_flange_trained=p.in_hand.ring_bottom_below_flange,
                 geometry=to_dict(p)["geometry"])

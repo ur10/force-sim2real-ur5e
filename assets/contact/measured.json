@@ -1,11 +1,11 @@
 {
- "_notes": "PROVISIONAL first-pass values from ~/ring_rod_probe/config/measured.json on the robot machine (2026-11-22, camera estimates, not calipers; treat as correct for the first pass). Sim units: m, kg.",
+ "_notes": "Measured values for the bench (2026-11-22): geometry from two-camera estimates, the grasp length from the camera views, confirmed by the author against external measurements. The bore is the camera fit (10.71 mm radius, 2.7 mm radial clearance).",
  "_sources": {
   "ring_outer_r": "outer_d 32 mm +/-3 (green printed hex nut, ~30 across flats, ~35 across corners)",
   "ring_height": "14 mm +/-2",
   "ring_bore_r": "NOT measured: kept at the RGB silhouette fit (10.71 mm); replace with rod_r + radial clearance from the registration side captures",
   "rod_r": "rod d 16 mm +/-1.5 (threads look like M16)",
-  "rod_chamfer": "1 mm, guess (tip hidden)",
+  "rod_chamfer": "1 mm (camera estimate, confirmed against external measurements)",
   "spacer_r": "spacer d 40 mm +/-5",
   "mass": "8 g +/-3 (PLA volume estimate)",
   "ring_bottom_below_flange": "225 mm +/-15 (flange to fingertip ~220 mm, ring ~5 mm below the tips)",

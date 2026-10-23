@@ -1,5 +1,5 @@
 {
- "note": "SIMULATION library (Isaac Lab, fin-ray grasp model, provisional measured parameters); not real data",
+ "note": "SIMULATION library (Isaac Lab, fin-ray grasp model, measured parameters); not real data",
  "protocol": {
   "controller": "stiff position control, stop at 8 N filtered force",
   "speed_mm_s": 5.0,

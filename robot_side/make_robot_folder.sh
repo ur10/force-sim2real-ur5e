@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Assemble the robot-machine folder (numpy + ur_rtde only; no Isaac, no torch):
 #   <dest>/deploy/                 deploy_policy.py (MOVES THE ROBOT), deploy_core.py, fake_ur.py, test_deploy.py
-#   <dest>/sim_library/deploy/     policy bundle, simulation reference log, rod-registration guess
+#   <dest>/sim_library/deploy/     policy bundle, simulation reference log
+#   <dest>/outputs/rod_registration.json  the rod registration (robot kinematics, confirmed against external measurements)
 #   <dest>/scripts/, <dest>/tests/ offline probe check (+ the GELLO collection script, which needs the
 #                                  lab's GELLO repo and the ring_rod_probe toolkit to run)
 #   <dest>/sim_library/            simulated probe library + held-out fixture
-#   <dest>/config/                 measured.json (the PROVISIONAL values) and a robot.yaml template,
+#   <dest>/config/                 measured.json (the measured values) and a robot.yaml template,
 #                                  unless they already exist: set the robot IP in robot.yaml
 #   <dest>/SESSION_GUIDE.md
 # Works from this repository or from an installed real2render2real checkout.
@@ -21,7 +22,9 @@ else                                      # installed: <r2r>/scripts/ur_contact/
 fi
 mkdir -p "$DEST/deploy" "$DEST/sim_library/deploy" "$DEST/scripts" "$DEST/tests" "$DEST/config"
 cp "$HERE"/deploy/*.py "$DEST/deploy/"
-cp "$DEP"/bundle_dagger_kinematic.npz "$DEP"/reference.npz "$DEP"/rod_registration_guess.json "$DEST/sim_library/deploy/"
+cp "$DEP"/bundle_dagger_kinematic.npz "$DEP"/reference.npz "$DEST/sim_library/deploy/"
+mkdir -p "$DEST/outputs"   # the registration goes where register_rod.py would write it (a new touch registration replaces it)
+[ -f "$DEST/outputs/rod_registration.json" ] || cp "$DEP"/rod_registration.json "$DEST/outputs/rod_registration.json"
 for f in residual_equivalence_fixture.npz bundle_residual_kinematic.npz; do if [ -f "$DEP/$f" ]; then cp "$DEP/$f" "$DEST/sim_library/deploy/"; fi; done
 cp "$HERE"/probe_features.py "$HERE"/probe_check.py "$HERE"/collect_contact.py "$DEST/scripts/"
 cp "$HERE"/test_probe_check.py "$HERE"/test_collect_contact.py "$DEST/tests/"
@@ -31,5 +34,5 @@ cp "$HERE"/SIM_LIBRARY.md "$DEST/sim_library/README.md"
 cp "$HERE"/SESSION_GUIDE.md "$DEST/"
 [ -f "$DEST/config/measured.json" ] || cp "$MEAS" "$DEST/config/measured.json"
 [ -f "$DEST/config/robot.yaml" ] || printf 'robot:\n  ip: "0.0.0.0"   # set the UR5e IP here\n' > "$DEST/config/robot.yaml"
-echo "assembled $DEST (config/measured.json = the PROVISIONAL values; set the robot IP in config/robot.yaml)"
+echo "assembled $DEST (config/measured.json and outputs/rod_registration.json: the measured values; set the robot IP in config/robot.yaml)"
 echo "then: cd $DEST && python deploy/test_deploy.py && python deploy/deploy_policy.py --dry-run -y --policy student"
