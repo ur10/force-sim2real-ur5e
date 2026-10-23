@@ -1,0 +1,216 @@
+{
+  "source": "force_rollout/videos",
+  "note": "Original files preserved byte-for-byte. Group and clip identifiers retain supplied filenames; policy, outcome, trial mapping, timestamps and force logs were not supplied. File counts are not trial counts. Duration is clip length, not task completion time.",
+  "files": [
+    {
+      "source_path": "videos/0/0.mp4",
+      "sha256": "5f302daf416975694605f626103c83dc90fb89293b1de4db60e2df70c5ed198d",
+      "size_bytes": 7523931,
+      "duration_s": 26.5,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 936,
+          "height": 720,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/0/1.mp4",
+      "sha256": "075be6996cb06c6bcc1b45ac04ac917f281d0fb23da6e87dd4c4ad5c1f6257b5",
+      "size_bytes": 8975352,
+      "duration_s": 26.533333,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1152,
+          "height": 720,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/0/2.mp4",
+      "sha256": "bd8c436d053d853155099cde2c28f7e8fe0fc366559df5df0f442935f150704c",
+      "size_bytes": 20795863,
+      "duration_s": 26.533333,
+      "streams": [
+        {
+          "codec_name": "hevc",
+          "width": 1440,
+          "height": 1080,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/0/3.mp4",
+      "sha256": "2c98ea9753bdf0908f5f58c119a630730c199cbe6250244bda063bd1972cd3ab",
+      "size_bytes": 20735669,
+      "duration_s": 26.533333,
+      "streams": [
+        {
+          "codec_name": "hevc",
+          "width": 1440,
+          "height": 1080,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/0/4.mp4",
+      "sha256": "32ff981216bca81078db214051f1e3fa1cc4bfeec38384f109742f687661dac4",
+      "size_bytes": 6707481,
+      "duration_s": 26.533333,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 776,
+          "height": 720,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/1/0.mp4",
+      "sha256": "c7fff4a614db2196f333322ca615ab06ea58c6c9c67da0db7d7391b9822f44d3",
+      "size_bytes": 6289499,
+      "duration_s": 22.233333,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 936,
+          "height": 720,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/1/1.mp4",
+      "sha256": "6a76796014942c7c1f40f315ab0e68129d7bc7bdb33a905147a9206e8a9eb569",
+      "size_bytes": 7506840,
+      "duration_s": 22.233333,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1152,
+          "height": 720,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/1/2.mp4",
+      "sha256": "0f453e2b1c10a6def24fcc8d6df51632f73736955b8b1609289aa73f0b08bed3",
+      "size_bytes": 17410502,
+      "duration_s": 22.233333,
+      "streams": [
+        {
+          "codec_name": "hevc",
+          "width": 1440,
+          "height": 1080,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/1/3.mp4",
+      "sha256": "b419986f3d490def04858531b2be6a15b221d9caf0111a519092c917a042cfcc",
+      "size_bytes": 17497761,
+      "duration_s": 22.233333,
+      "streams": [
+        {
+          "codec_name": "hevc",
+          "width": 1440,
+          "height": 1080,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/1/4.mp4",
+      "sha256": "12a8b9ca0d5f4106ddefbca3514c0996feec69a007ebc28b3fd630d7e220ca93",
+      "size_bytes": 5647753,
+      "duration_s": 22.266667,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 776,
+          "height": 720,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/2/0.mp4",
+      "sha256": "9a34b997fa11c89966d9d2cc345e19d126332789f0e15b509d49266dbcec3686",
+      "size_bytes": 7813643,
+      "duration_s": 28.433333,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 936,
+          "height": 720,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/2/1.mp4",
+      "sha256": "a914de4088c5516f3d37d8a6adfb19fd1d12dac2b63a2b13ad27f0b3b54ae2cb",
+      "size_bytes": 9135297,
+      "duration_s": 28.433333,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1152,
+          "height": 720,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/2/2.mp4",
+      "sha256": "aea9c8b80f9c23e17a8a575cd295bca2f2d523e2d791aea6e20e9fb0c3e9c267",
+      "size_bytes": 22191624,
+      "duration_s": 28.433333,
+      "streams": [
+        {
+          "codec_name": "hevc",
+          "width": 1440,
+          "height": 1080,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/2/3.mp4",
+      "sha256": "64411028b1ba53a5c59e9e05ef31353e5ba7bcd849174fb6c48a168df8d67992",
+      "size_bytes": 22161735,
+      "duration_s": 28.433333,
+      "streams": [
+        {
+          "codec_name": "hevc",
+          "width": 1440,
+          "height": 1080,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    },
+    {
+      "source_path": "videos/2/4.mp4",
+      "sha256": "c95d40f86ed1786771b51e2ca040fca2ec2d937267148c859d3784433644d21c",
+      "size_bytes": 6955143,
+      "duration_s": 28.433333,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 776,
+          "height": 720,
+          "r_frame_rate": "30/1"
+        }
+      ]
+    }
+  ]
+}

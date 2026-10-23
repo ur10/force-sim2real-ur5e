@@ -1,329 +1,212 @@
-# Force-Aware Sim2Real for Tight-Tolerance Insertion
+# From Demonstrations to Contact: Calibration-Driven Sim-to-Real Learning on a UR5e
 
-**A UR5e with a Robotiq 2F-85 (fin-ray fingers) putting a nut on a threaded rod, with policies that
-feel for the hole.** This project extends [real2render2real-ur5e](https://github.com/ur10/real2render2real-ur5e),
-where one human video became many *kinematic* robot demonstrations. Here those demonstrations get
-physics and force sensing:
-- a contact simulation of the nut, the fingers and the rod (Isaac Lab / PhysX);
-- a model of the UR5e's wrist force/torque sensing, identified against the real arm;
-- two learning routes, a privileged teacher with DAgger and residual reinforcement learning;
-- the tooling to calibrate the simulation against the bench and to deploy the policies on it.
+**A force-aware manipulation pipeline that connects generated demonstrations, physical contact simulation, real-robot calibration, imitation learning, and residual reinforcement learning.**
 
-> **Status (2026-11-22).** All policy results below are **simulation**. On the real robot so far:
-> the bench calibration (wrist sensor, payload, rod registration and geometry; real data and videos
-> in *Calibrating the bench*), the deployment tooling and its offline tests. Hardware trials of the
-> policies are pending; this README will report them with their logs.
+[Project background: Real2Render2Real](https://github.com/ur10/real2render2real-ur5e) · [Research plan and experiment log](docs/PLAN.md) · [Simulation implementation](contact_sim/README.md) · [Hardware evaluation template](docs/HARDWARE_EVALUATION_TEMPLATE.md)
 
-<p>
-<img src="docs/media/comparison_measured.jpg" width="100%" alt="Simulated insertions: four held-out episodes for each of blind replay, DAgger student with the deployable estimate, DAgger student, residual on the student, privileged expert">
+> **Evaluation status · November 23, 2026.** Initial independent hardware testing suggests that the **residual RL policy performs better on the UR5e than the imitation-learning baseline**. This is a preliminary observation supplied by the project author; [Hardware rollout footage is now included](docs/media/hardware/README.md); comparable trial counts, policy/checkpoint labels and force traces have not yet been published. All numerical policy success rates below are **simulation results**, not robot results. Payload, wrist-sensor characterization, rod registration, and deployment equivalence checks have been completed. Full real-contact parameter identification and a controlled hardware benchmark remain future work.
+
+<p align="center">
+  <img src="docs/media/comparison_measured.jpg" alt="Five simulated insertion strategies evaluated on the same held-out examples" width="95%">
 </p>
+<p align="center"><em>SIMULATION · Same held-out insertion starts, comparing replay, DAgger, residual RL and a privileged teacher. An invalid physics episode is counted as failure.</em></p>
 
-*Simulation, measured parameters, 0.5 mm radial clearance. Columns: blind replay, the
-DAgger student with the deployable offset estimate, the DAgger student, the residual policy on the
-student, the privileged expert. Rows: the same four held-out episodes. "Invalid" marks an episode
-stopped because the nut sank more than 0.5 mm into the rod (a physics failure, counted as not seated).*
+## The problem: good demonstrations do not teach contact recovery
 
-## Why force
+The preceding [Real2Render2Real project](https://github.com/ur10/real2render2real-ur5e) generated robot trajectories from a human demonstration, using reconstruction, retargeting and trajectory repair. Those demonstrations describe **where the manipulated object should move**—but not how it should respond when a real object jams, tilts or shifts inside the gripper.
 
-In the generated demos the nut follows the tracked path onto the rod and nothing pushes back. With no
-in-hand error, 47 of 48 generated demos seat without touching the rod (simulation), so a perfect demo
-never teaches contact. On the bench, three things go wrong at once:
-- the nut sits a millimetre or two off in the fingers;
-- the rod position is known to about as well;
-- a tight nut has only 0.5 mm of radial clearance.
+For nut-on-rod insertion, a few millimetres of grasp or fixture error can turn an apparently perfect trajectory into a contact failure. In the kinematic demonstration generator, the nut follows a prescribed trajectory without contact forces. With no injected in-hand error, 47/48 physically replayed demonstrations entered without contacting the rod in simulation. Successful demonstrations alone therefore provided almost no examples of recovery.
 
-Contact then decides the outcome, and the only sensor that sees it is the wrist force/torque.
+**Research question:** Can a measurement-informed contact simulator turn generated demonstrations into policies that recover from misalignment on a real robot? And does **residual RL** transfer more effectively than imitating a privileged contact expert?
 
-## What is in this repository
+## At a glance
 
-| Path | What |
-|---|---|
-| `contact_sim/` | The contact simulation, sensor model, privileged expert, DAgger, residual RL (PPO), probes, evaluation (`contact_sim/README.md` lists every file) |
-| `robot_side/` | Real-robot side, numpy only: the session guide for an agent on the robot machine, the GELLO collection script with wrench logging, the offline probe check, and `deploy/` (the policy deployment with `ur_rtde`, a stand-in robot for dry runs, 10 offline tests) |
-| `generator_fix/` | The fix to the generator that physics replay exposed (held nut checked against the full bolt stand, lifted over the rod tip after the warp), and the trajectory exporter |
-| `assets/` | The 49 exported generated nut trajectories, the bench measurements and rod registration, the simulated probe library, the policy bundles for the robot |
-| `results/` | Every simulated held-out evaluation behind the tables below (`sim_evaluations.json`), learning curves, the speed sweep, and the real sensor and payload identification |
-| `runs/` | The exact queues that produced the results |
-| `docs/PLAN.md`, `docs/media/` | The working plan and lab notebook as written; figures, calibration and registration videos (`docs/tools/make_registration_video.py`) |
+| Component | Implemented in this repository |
+| --- | --- |
+| **Robot / task** | UR5e, Robotiq 2F-85 fin-ray grasp, nut insertion over a fixed rod; **not** threaded fastening |
+| **Simulation** | Isaac Lab 2.0.2 / Isaac Sim 4.5; contact-capable nut/rod geometry and an in-hand compliance model |
+| **Hardware calibration** | Wrist F/T characterization, payload and CoG estimation, robot-frame rod registration, measured geometry |
+| **Policies** | Privileged-expert DAgger student; bounded residual PPO on a frozen base policy |
+| **Real deployment** | Numpy-only inference, synchronized wrist/pose observations, `ur_rtde`, 30 Hz policy and 120 Hz `servoL` |
+| **Evaluation** | Held-out simulation tests with 128 attempts per reported condition; preliminary hardware comparison, quantitative release pending |
 
-## Method
+## Pipeline
 
-**Contact twin.**
-- **Rod:** a 64-sided convex frustum with a tip chamfer.
-- **Nut:** 32 convex sectors, so the bore stays open.
-- **Grip:** the nut hangs from the gripper on a six-axis spring placed in the middle of the band the fin-ray tips pinch. It is stiff across the closing direction and soft for rocking about the line between the two contacts.
-- **Solver:** the Factory insertion settings (240 Hz, 192 position iterations, one solver partition).
-- **Wrench readout:** taken at the arm–gripper joint; it reads back a known 5.4 N load to 0.016 N.
+```mermaid
+flowchart LR
+    A[Human demonstration] --> B[Reconstruct, retarget, repair]
+    B --> C[Generated approach trajectories]
+    C --> D[Physics-based contact episodes]
+    E[Real UR5e: payload, sensor, geometry and registration] --> F[Measurement-informed sim parameters]
+    F --> D
+    D --> G[Privileged expert + DAgger]
+    D --> H[Residual PPO]
+    G --> H
+    G --> I[Hardware-compatible inference]
+    H --> I
+    I --> J[UR5e contact rollouts]
+    J -. Future probe-based model refinement .-> F
+```
 
-**Sensor chain.** The policy channel is computed from the simulated contact through the same stages
-as the UR's wrist sensing:
-1. tool weight;
-2. bias and drift;
-3. noise;
-4. compensation with the configured payload (with mass and centre-of-gravity error);
-5. reporting point and frame;
-6. 500 Hz sample-and-hold;
-7. latency;
-8. first-order 20 Hz low-pass;
-9. a tare averaging 0.2 s.
+**What transfers from one task to another:** sensor identification, coordinate-frame verification, probe-based parameter comparison, rollout logging, policy export, safety checks and evaluation protocol. **What must change:** task geometry, grasp/contact model, reset distribution, success detector, reference behavior and task-specific reward. This is a reusable **framework architecture**, not yet a cross-task-validated general-purpose solution.
 
-**Privileged expert and DAgger.** A hand-written expert sees the true nut-to-rod offset, depth and tilt.
-A student MLP (3 × 256) sees only deployable inputs:
-- the last 8 sensed wrenches;
-- the commanded and measured TCP offsets;
-- its previous action;
-- an offset estimate.
+## Four technical contributions
 
-It outputs a 5-d TCP velocity (x, y, z, rotation rates about x and y). DAgger lets the student drive
-and has the expert label every state it visits; four rounds, with the expert share going 100 → 50 →
-25 → 0 %.
+### 1. Turn kinematic demonstrations into physically executable starts
 
-Lesson learned: the teacher's decisions must be observable to the student. An expert that hovered
-until it *knew* it was aligned produced a student that hovers forever (0/128). An expert whose
-decisions follow felt contact works: descend, lift until the force releases, step sideways.
+Generated trajectories provide a nominal approach and insertion intent. Before training, physics replay revealed failures invisible in the rendering-only pipeline: **11/49** original paths grazed the upper rod because collision checks omitted the held nut and part of the fixture. After fixing clearance checks and the post-warp lift, **48/48** regenerated paths passed the collision check with a minimum reported clearance of 2.90 mm.
 
-The **offset estimate** comes in two kinds:
-- **oracle:** the true offset plus a 1 mm per-episode bias and noise, a stand-in for an in-hand tracker;
-- **kinematic:** the registered rod position minus where the TCP pose says the nut is, blind to the in-hand error. This is the deployable one.
+The contact environment then introduces grasp offset, tilt and fixture uncertainty. Unlike kinematic replay, it exposes realistic failure and recovery states to the policy.
 
-### The RL technique: residual PPO with an asymmetric critic
+### 2. Build the observation model from the real robot outward
 
-- **Residual policy.** A frozen base policy plus a bounded learned correction,
-  `a = clip(a_base + s ⊙ clip(π_θ(o, a_base), -1, 1), -1, 1)` with `s = (0.6, 0.6, 0.6, 0.5, 0.5)`.
-  The base is either the generated demo's insertion replayed blindly (5 mm/s down, stops pushing
-  above 3 N) or a DAgger student. The actor starts near zero, so training starts from the base's behaviour.
-- **Algorithm.** PPO:
-  - clipped objective (0.2), GAE (γ 0.99, λ 0.95);
-  - 5 epochs × 4 minibatches per update, Adam 3e-4 annealed linearly to 10 % over the budget;
-  - gradient clip 1.0;
-  - Gaussian policy with a learned log-std (initial -1.2), no entropy bonus.
-- **Asymmetric actor-critic.** The actor sees only the deployable observation (62-d) and the base
-  action. The critic also gets privileged state (offset, depth, tilt, rod in the bore), which exists
-  only in simulation and is dropped at deployment. Inputs are normalised with running mean/variance,
-  clipped at ±10.
-- **Reward.** Potential-based shaping with Φ(s) = -min(|e_xy| / 2 mm, 2) + σ((gap - |e_xy|) / 0.2 mm) · clip(depth / 15 mm, 0, 1),
-  which rewards alignment and only rewards depth while the nut is inside the gap. On top of the shaping:
-  - +10 for seating, -10 for aborting (40 N) or invalid physics;
-  - minus dt · (0.1 + 2 · c_wrench + 0.1 · |residual|² + 0.02 · |Δresidual|²);
-  - `c_wrench`: squared excess of each wrench component over a soft limit (5 N lateral, 8 N axial, 0.3 N·m), scaled by the distance to a hard limit (30/40 N, 2 N·m), averaged over every physics sub-step rather than only the policy tick.
+The controller does not receive ideal simulated contact force. The simulated wrist observation models tool gravity and payload compensation, bias/drift, sensor noise, reporting frame and reference point, 500 Hz sampling, latency, causal low-pass filtering and a pre-attempt tare. The same feature construction is used in deployment.
 
-  Unit tests check the reward can't be farmed: inserting scores highest, hovering earns no progress,
-  touch-and-retreat earns nothing recurring.
-- **Rollouts.** 128 parallel environments, 30 Hz policy, 8 s episodes, 48-tick rollouts. Time-limit
-  ends are bootstrapped. Updates on chunks with fewer than 32 running samples are skipped: one sample
-  gives a NaN advantage std, which poisoned one run before the fix. Episodes reset once every env is done.
+**Measured on the UR5e:** See the [calibration provenance table](docs/CALIBRATION.md) for sources and provisional parameters.
 
-**Offline calibration check.** A library of 18 simulated probe sets (clearance × grip stiffness ×
-friction, 24 attempts each) is compared with real probe attempts by the same feature code, numpy only,
-on the robot machine. From each attempt it reads:
-- where contact starts;
-- how fast force rises per millimetre of descent;
-- the outcome.
+| Quantity | Hardware finding | Why it matters |
+| --- | --- | --- |
+| Tool payload | **1.35 kg** fitted vs **1.0 kg** configured | An incorrect payload creates orientation-dependent force errors |
+| Payload center of gravity | **43 mm** along the tool | Changes torque compensation |
+| Post-tare compensated force variation across poses | **1.17 N → 0.70 N RMS** using the fitted payload | Less spurious force input from gravity model mismatch |
+| Wrist force noise | **0.11–0.17 N per axis** at rest | Sets the useful scale for low-force contact features |
+| Wrist torque noise | **~0.004 N·m per axis** | Limits observability of small contact moments |
+| Sensor logging | **500 Hz** RTDE, no observed drops in the characterized session | Supports timed alignment of action and force observations |
 
-Rod-top landings calibrate the grasp length, and outcomes in several directions locate the rod axis.
+<p align="center"><img src="docs/media/payload_calibration.gif" width="85%" alt="REAL: payload identification across multiple robot orientations"></p>
+<p align="center"><em>REAL HARDWARE · The fitted tool payload is checked across multiple static wrist orientations.</em></p>
 
-**Deployment.** `robot_side/deploy/` rebuilds on the real arm exactly the observation the simulated
-policies saw:
-- **Frames:** the sim's root link is the UR base frame and its `tool0` the UR flange.
-- **Wrench:** sign from the wrench check, torque shifted to the sim's TCP point, tare, the same filter.
+<p align="center"><img src="docs/media/payload_result.jpg" width="80%" alt="Real payload and compensation identification results"></p>
 
-It runs the policy at 30 Hz with `servoL` at 120 Hz, inside a set of stops:
-- force (20 N);
-- a workspace box around the entry;
-- orientation and tracking limits;
-- robot mode;
-- the operator's Enter key.
+**Fixture registration:** A robot-kinematics-based measurement, from three teleoperated releases, estimates the rod axis in the UR5e base frame. This intentionally does not depend on the available camera hand–eye estimates, which were inconsistent across streams. The experiment also uses measured or image-estimated geometry and grasp length; **the bore and several contact parameters still need direct physical validation**.
 
-It checks the start pose and waits for confirmation, never moves after an attempt, and asks for the
-observed outcome. The student and the residual actor run in plain numpy; no PyTorch is needed on the robot.
+<p align="center"><img src="docs/media/registration_demo.gif" width="90%" alt="REAL: logged teleoperated rod registration with a camera view and robot kinematics"></p>
+<p align="center"><em>REAL HARDWARE · Rod-axis registration from robot pose logs and release locations.</em></p>
 
-## Calibrating the bench (REAL)
+**Probe-based calibration path:** The repository contains an 18-configuration simulated library spanning clearance, effective grip stiffness and friction. A common feature extractor compares contact onset, force-vs-descent slope and seating/jamming outcomes. The ranking mechanism has been checked on **held-out simulation probes**; calibration against a complete real contact-probe dataset is not yet established. See [`robot_side/SIM_LIBRARY.md`](robot_side/SIM_LIBRARY.md).
 
-The parameters the simulation needs from the real cell were measured with read-only RTDE logging at
-500 Hz while the arm was moved by hand with a GELLO. The values below are the ones the measured-parameter
-results use; the author confirmed them against external measurements.
+### 3. Compare imitation with reinforcement learning under contact uncertainty
 
-**Payload.** Ten still poses at 6–36° tool tilt, fitting F = m·g + F₀ and T = (m c) × g + T₀ to the raw
-wrist wrench. Result: 1.35 kg (1.29–1.41 kg leaving any one pose out), centre of gravity 43 mm along the
-tool, against the 1.0 kg configured on the pendant. After a tare, the compensated force drifts 0.70 N RMS
-between poses with the fitted payload, against 1.17 N with the configured one. The rest is the
-wrist-camera cables pulling on the flange, which no fixed payload can model; a tare before each attempt
-removes most of it.
+**DAgger student.** A privileged simulator teacher observes the true nut-to-rod displacement and tilt. It labels states visited by a 3×256 MLP student, while the student uses deployable features: an eight-sample history of six-axis wrist wrench, commanded/measured TCP offsets, previous action and an estimated alignment offset. An important design lesson was that the teacher's *decision to move* must be inferable from the student's observations. A teacher that hovered until privileged alignment was known produced a student that kept hovering; a contact-driven descend–release–shift strategy learned more useful behavior.
 
-<p><img src="docs/media/payload_calibration.gif" width="100%" alt="Real payload calibration: the UR5e holds still at ten tool orientations while the wrist force and the direction of gravity in the sensor frame are plotted"></p>
+**Residual RL.** PPO learns a bounded correction on top of a frozen nominal policy:
 
-*REAL, sped up. Full video (60 s at 2×): [`docs/media/videos/payload_calibration.mp4`](docs/media/videos/payload_calibration.mp4).*
+\[
+ a_t = \operatorname{clip}\!\left(a_{\mathrm{base},t} + s \odot \operatorname{clip}\left(\pi_\theta(o_t,a_{\mathrm{base},t}),-1,1\right),-1,1\right).
+\]
 
-<p><img src="docs/media/payload_result.jpg" width="85%" alt="Payload fit: 1.35 kg, centre of gravity 43 mm along the tool, and the force error per pose for the configured and the fitted payload"></p>
+The actor uses deployable inputs only. During simulation training, an **asymmetric critic** can additionally see true offset, depth and tilt; the privileged signals are **not used by the actor on hardware**. Reward terms favor successful seating, contact-aware alignment, low excessive wrench and smooth, small corrections. A bounded residual retains the nominal policy's useful structure while allowing closed-loop recovery.
 
-**Wrist sensor.** One session of four still holds of 15–19 s at 8–34° tilt after a tare, plus
-free-motion segments (`results/real_sensor.json`, `results/real_payload_fit.json`):
+**Why RL might transfer better:** DAgger learns to match the teacher's actions under a modeled set of states. PPO optimizes the downstream outcome over states encountered during its own rollouts. The latter could favor repeated contact-based recovery over exact imitation when real grasp slip, fixture error, filtering or delays depart from the simulator. **This is a hypothesis to test against hardware logs**, not a demonstrated causal explanation.
 
-| Parameter | First sensor model | Measured on the UR5e |
-|---|---|---|
-| Force noise per axis | 0.5 N | 0.11–0.17 N |
-| Torque noise per axis | 0.02 N·m | 0.004 N·m |
-| Drift | 0.05 N/s | ≤ 0.023 N/s |
-| Bias change between orientations, after one tare | – | up to 1.6 N |
-| Force while moving freely | 0.35 N RMS (sim jitter) | 0.5–0.74 N std per axis |
-| Payload | compensated exactly | 1.35 kg, CoG 43 mm along the tool; 1.0 kg configured |
-| Rate | 500 Hz | 500 Hz over RTDE, no drops |
+### 4. Keep the training/deployment observation contract identical
 
-**Rod registration from the robot's own kinematics.** The rod's position comes from the arm, not the
-cameras: none of the available hand-eye calibrations projected the robot correctly into every camera
-stream, so camera geometry was not used for it. In three teleoperated insertions the nut bottom is the
-flange position plus the 225 mm grasp length along the tool axis. Where the gripper opens over the rod,
-the nut rests on it. The three releases give the rod axis at (−85, −810) mm and the tip at 180 mm in the
-UR5e base frame (`assets/contact/rod_registration.json`).
+The same observation dimensions, normalization, wrench transforms, causal filtering and action integration are rebuilt for deployment. The robot-side policies run in Numpy without Isaac or PyTorch. The existing offline suite includes **10 deployment tests**, checking observation equivalence to float32 precision, student/residual inference equivalence and simulated stop behavior.
 
-<p><img src="docs/media/registration_demo.gif" width="100%" alt="Rod registration: a teleoperated insertion with the side and wrist cameras, the nut bottom path in a top view with the three release points around the rod axis, and the nut height over time with the release marked"></p>
+Policy frequency: **30 Hz**; UR control via `servoL`: **120 Hz**. Deployment includes configured workspace and orientation/tracking boundaries, robot-mode checks, operator intervention and a **20 N hardware force stop**. These are operational safeguards, **not a formal safety guarantee**; review the [session guide](robot_side/SESSION_GUIDE.md) before any robot motion.
 
-*REAL, sped up. Full video: [`docs/media/videos/registration_demo.mp4`](docs/media/videos/registration_demo.mp4); made with
-`docs/tools/make_registration_video.py` from the robot's logged flange poses and the camera episodes
-(side camera cropped).*
+## Results and what they do (and do not) establish
 
-**Geometry.** Rod 16 mm, threaded, with a 1 mm tip chamfer; nut 32 mm across, 14 mm thick, 8 g, 2.7 mm
-radial clearance; nut bottom 225 mm below the flange in the fin-ray grip. From two RealSense views at
-about 1 mm per pixel and the robot kinematics (`assets/contact/measured.json`, and
-`measured_robot_format.json` for the robot side).
+### Preliminary hardware finding
 
-## Results (simulation)
+> **Author-observed:** In an independent evaluation on the physical UR5e, residual RL performed better than the tested imitation-learning policy. A paired benchmark and supporting data—success counts, contact force, elapsed time, offsets, termination reasons and checkpoint identifiers—will be added here. Until then this is a **preliminary qualitative finding**, not a published numerical improvement.
 
-Held-out evaluation: the same 128 episodes (64 envs × 2 rounds, seed 100) for every row of a table;
-95 % Wilson intervals; one training seed per policy. Every number is a row of `results/sim_evaluations.json`.
+**Why this matters:** A policy that looks comparable to imitation in simulation may behave differently once contact, compliance, sensor artifacts and reset variability come from the physical system. The next experiment is designed to identify the source of that difference.
 
-**First parameter set** (placeholder hardware values, rigid-centre grasp model), 0.5 mm clearance:
+### Reproducible simulation reference
 
-| Policy | Seated / 128 |
-|---|---|
-| Privileged expert | 128 |
-| Residual RL on blind replay, 90 min | **125** (93–99 %) |
-| DAgger student, contact teacher | 67 (44–61 %) |
-| same, wrench input removed | 0 |
-| same, offset estimate removed | 37 |
-| Behaviour cloning only | 16–20 (108–112 aborted) |
-| DAgger student, hover teacher | 0 (all wait above the tip) |
-| Hand-designed wrench-only controller | 20 |
-| Blind force-limited replay | 7 |
+All results below are **SIMULATION**, measured-parameter configuration, fin-ray grasp, **0.5 mm radial clearance**, 128 held-out episodes per evaluation, one training seed per policy. See [`results/sim_evaluations.json`](results/sim_evaluations.json).
 
-**Fin-ray grasp model**, same setup:
+| Policy / observation assumption | Seated / 128 | Interpretation |
+| --- | ---: | --- |
+| Blind force-limited replay | **35** | Nominal motion without learned recovery |
+| DAgger with **deployable kinematic estimate** | **78** | Practical estimator does not know in-hand displacement |
+| DAgger with **oracle-derived noisy offset estimate** | **91** | Evaluation assumption not available on the current robot |
+| Residual PPO on the **oracle-estimate DAgger base** | **93** | Comparable to the oracle-estimate DAgger row; overlap is substantial |
 
-| Policy | Seated / 128 |
-|---|---|
-| Privileged expert | 128 |
-| DAgger student (retrained) | **118** (86–96 %) |
-| Residual RL on blind replay, 90 min (still rising) | 112 (81–92 %) |
-| First-grasp-model residual, run unchanged | 122 |
-| DAgger student, no offset estimate | 91 |
-| Hand-designed wrench-only controller | 35 |
-| Blind force-limited replay | 20 |
-| DAgger student, no wrench | 8 |
+**Do not compare 93/128 with 78/128 as an RL gain:** those rows use different offset-estimation assumptions. The repo documents a training path for residual PPO on the **kinematic-estimate** DAgger base, but the same-condition held-out evaluation and hardware results should be published together before claiming improvement.
 
-<p><img src="docs/media/residual_learning_curve.png" width="85%" alt="Held-out success of the residual RL policy per 15-minute checkpoint, both grasp models"></p>
+At **2.7 mm clearance** (the physical nut's approximate camera-derived fit), blind replay already succeeded in **122/128** simulated attempts. Tight clearances and deliberately varied grasp/fixture offsets are thus much more informative than nominally easy starts.
 
-**Measured parameters** (see *Calibrating the bench*), fin-ray grasp. Policies trained at 0.5 mm
-clearance and evaluated at 0.5 mm, 1.0 mm and the nut's 2.7 mm:
+<p align="center"><img src="docs/media/residual_learning_curve.png" width="85%" alt="Residual policy held-out simulation success over training time"></p>
+<p align="center"><em>SIMULATION · Learning curves across grasp models. Curves are not direct evidence of hardware transfer.</em></p>
 
-| Policy | 0.5 mm | 1.0 mm | 2.7 mm | 0.5 mm, identified real sensor |
-|---|---|---|---|---|
-| Privileged expert | 128 | 128 | 128 | – |
-| Residual RL on the DAgger student, 40 min | **93** (64–80 %) | 111 | 128 | 88 |
-| DAgger student | 91 (63–78 %) | **115** | 128 | 90 |
-| DAgger student, no wrench / no offset estimate | 84 / 60 | – | – | – |
-| DAgger student, **deployable (kinematic) estimate** | 78 (52–69 %) | 95 | 128 | 80 |
-| Residual RL on blind replay, 40 min | 45 | 64 | 124 | 44 |
-| Hand-designed wrench-only controller | 41 | – | – | – |
-| Blind force-limited replay | 35 | 50 | 122 | 35 |
+### What the calibration results mean
 
-What these numbers show:
-- **Geometry matters as much as the policy.** With the measured geometry, blind replay and the
-  no-wrench student do much better than before. The largest change is the 1 mm tip chamfer, which
-  guides a nut that arrives slightly off without any force feedback; its effect was not isolated in
-  an experiment.
-- **Clearance decides whether force feedback matters at all.** At the nut's 2.7 mm, blind replay
-  already seats 122/128; at 1 mm or less (a tighter nut), the policy decides the outcome.
-- **The measured sensor changes nothing material.** Swapping it in moves no policy by more than 5 episodes.
-- **The residuals here are budget-limited.** They got 40 minutes, against the 90-minute curve above.
-- **Deployment can only use the kinematic estimate.** Residuals trained on the oracle estimate can't
-  run on the robot. The deployable residual is one trained on the kinematic-estimate student
-  (`contact_sim/README.md`).
+Sensor identification corrected a real mismatch in the payload model. However, substituting the measured noise/drift model into the reported simulation changed policy outcomes by at most five of 128 episodes in the published conditions. **This does not establish a hardware performance gain from calibration.** The right experiment is a controlled hardware ablation: measured vs deliberately mismatched sensor/contact parameters, with identical actors, training budgets and held-out starts.
 
-**Speed and impedance** (`results/speed_impedance.json`):
-- A passive compliant descent (admittance, 2.5–20 mm/s, damping ×0.5–×2) at 0.5 mm seats only the
-  centred attempts, 2–5 of 24, at any setting. Its peak force follows damping × speed, up to 13 N.
-- The force-regulating privileged expert seats 128/128 at every speed limit from ×0.5 to ×4. Median
-  time falls from 5.1 s to 1.1 s while the peak force stays at 2.1–2.7 N.
+## Real-robot evaluation footage
 
-**Offline calibration check, validated on held-out simulated runs** (`robot_side/SIM_LIBRARY.md`):
-- the correct parameter set ranks first;
-- a grasp length stated 3 mm too long or 12 mm too short is recovered to 0.05 mm;
-- with 1 mm of registration error the true set stays among the three within 10 %, with clearance blurred between 0.5 and 1.0 mm;
-- off-grid parameters land on the nearest grid points.
+The supplied `force_rollout` footage is now included: **three source groups, five original clips per group**. Group meanings and policy/trial mapping were not supplied, so these are labeled by their original folder names. File counts are not independent trial counts, and no success rates, matched comparisons or force measurements are inferred from the clips.
 
-<p>
-<img src="docs/media/probe_regimes.jpg" width="62%" alt="Simulated probes in cross-section with force traces: free entry, bore-wall contact, rod-top landing">
-<img src="docs/media/finray_closeup.jpg" width="36%" alt="Close-up of the fin-ray grasp seating the nut in simulation">
-</p>
+Click a poster to open the full-speed preview (clip `0` from each group):
 
-**Physics replay of the generated data found real bugs** before any learning:
-- **11/49 generated paths grazed the top 21 mm of the rod.** The planner had checked the arm against a
-  rod cut at the placed nut's height and never checked the held nut. Fixed in `generator_fix/`; after
-  regenerating, 48/48 pass with 2.90 mm closest approach.
-- **~50 N gripper-inertia spikes** came from carries that start mid-motion; a smooth start removed them.
-- **Joint speeds above the UR5e's rating:** a median ×1.48.
-- **2π jumps of the last wrist joint** in 7–11 of 49 trajectories.
-- **Four phantom 1 kg bodies** from the URDF import of massless frames.
+| Source group 0 · 26.50 s | Source group 1 · 22.23 s | Source group 2 · 28.43 s |
+| --- | --- | --- |
+| [![REAL UR5e: source group 0](docs/media/hardware/group-0.jpg)](docs/media/hardware/group-0.mp4) | [![REAL UR5e: source group 1](docs/media/hardware/group-1.jpg)](docs/media/hardware/group-1.mp4) | [![REAL UR5e: source group 2](docs/media/hardware/group-2.jpg)](docs/media/hardware/group-2.mp4) |
 
-**Deployment tooling (offline).** The 10 tests in `robot_side/deploy/test_deploy.py` pass:
-1. the rebuilt 62-d observation matches the simulator's at every tick of a logged simulated run, to float32 precision;
-2. so do the wrench filter and the action integration;
-3. the numpy student and the numpy residual reproduce the PyTorch policies;
-4. stand-in-robot episodes seat when aligned, stop pushing on the rod top, and abort on excess force.
+[Browse all 15 original clips and provenance](docs/media/hardware/README.md) · [Hardware evaluation protocol](docs/HARDWARE_EVALUATION_TEMPLATE.md)
 
-## Install and run
+Preview durations describe the video files, not insertion completion times. Original clips are preserved byte-for-byte; preview copies retain their frames and timing. Checkpoint IDs, outcomes, offsets and synchronized force logs remain to be supplied before a quantitative hardware comparison can be reported.
 
-Simulation: Isaac Lab 2.0.2 / Isaac Sim 4.5, on top of a real2render2real checkout with the
-[real2render2real-ur5e](https://github.com/ur10/real2render2real-ur5e) overlay installed. That overlay
-provides the UR5e + Robotiq 2F-85 model, the URDF and USD build, and the nut task.
+## Reusable calibration workflow
+
+For a new contact task, the intended workflow is:
+
+1. **Register geometry and frames:** measure the manipulated part, fixture, grasp offset, TCP and sensor reporting frame.
+2. **Identify the observation channel:** fit tool mass/CoG, characterize bias/drift/noise, log timestamps and latency, verify wrench axes and moment reference point.
+3. **Probe contact:** collect a small, controlled set of offset/tilt/force tests; compare onset, force slope and outcomes against simulated parameter candidates.
+4. **Build a variability model:** fit effective grip compliance/friction and randomize around defensible measured ranges rather than arbitrary values.
+5. **Learn corrections:** use nominal demonstrations and an imitation or residual RL policy; keep privileged state on the training side only.
+6. **Validate on robot:** run paired starts, monitor limits, log failure modes and report both completion and force/cycle-time costs. Feed new identification data back into the simulator.
+
+**Built and evidenced here:** the measurement and registration tools, contact simulator, candidate-probe comparison software, training approaches and deployable inference. **Not yet demonstrated:** a completed real-contact parameter fit followed by zero-shot transfer across multiple independent tasks or robots.
+
+## Repository guide
+
+| Directory | Contents |
+| --- | --- |
+| [`contact_sim/`](contact_sim/) | Isaac contact environment, wrench sensor, DAgger, residual PPO, training and evaluation |
+| [`robot_side/`](robot_side/) | Calibration capture, probe comparison, Numpy deployment, offline tests and operator guide |
+| [`generator_fix/`](generator_fix/) | Collision and trajectory export improvements found during physics replay |
+| [`assets/`](assets/) | Demonstration trajectories, configuration measurements, rod registration and policy bundles |
+| [`results/`](results/) | Sim evaluation JSON and measured sensor/payload results |
+| [`runs/`](runs/) | Queues and experiment invocations |
+| [`docs/PLAN.md`](docs/PLAN.md) | Original working plan and dated lab notebook (historical status updates are not current) |
+
+## Reproduce the implementation
+
+**Simulation** requires Isaac Lab 2.0.2 / Isaac Sim 4.5 and a compatible [`real2render2real-ur5e`](https://github.com/ur10/real2render2real-ur5e) checkout, which provides the UR5e / Robotiq models and task assets.
 
 ```bash
-./install.sh /path/to/real2render2real          # copies contact_sim, robot_side, the generator fix, assets
+./install.sh /path/to/real2render2real
 cd /path/to/real2render2real
-.venv/bin/python scripts/ur_contact/test_contact_modules.py      # offline tests, no Isaac
-# training and evaluation commands: contact_sim/README.md; the exact queues used: runs/
+.venv/bin/python scripts/ur_contact/test_contact_modules.py
+# Training, held-out evaluation and exact example commands: contact_sim/README.md and runs/
 ```
 
-Robot side (numpy and `ur_rtde`; no Isaac, no PyTorch):
+Robot-side **offline checks** (do not move the robot):
 
 ```bash
-robot_side/make_robot_folder.sh ~/force_deploy  # deploy/, policy bundles, probe check, session guide, config templates
-cd ~/force_deploy                               # set the robot IP in config/robot.yaml
-python deploy/test_deploy.py                    # 10 offline tests
-python deploy/deploy_policy.py --dry-run -y --policy student     # rehearsal on the stand-in robot
-python deploy/deploy_policy.py --policy replay --air-mm 30 -l air_replay   # MOVES THE ROBOT: see SESSION_GUIDE.md step E
+robot_side/make_robot_folder.sh ~/force_deploy
+cd ~/force_deploy
+python deploy/test_deploy.py
+python deploy/deploy_policy.py --dry-run -y --policy student
 ```
 
-`robot_side/SESSION_GUIDE.md` is written for a coding agent on the robot machine: it guides the operator
-and checks outputs, but never starts anything that moves the arm itself.
+**Do not run live robot commands without checking `robot_side/SESSION_GUIDE.md`, establishing hardware stops and completing lab operator approval.**
 
-## Limitations
+## Limitations and next measurements
 
-- A parallel-jaw gripper with passive fin-ray fingers and the arm's built-in wrist sensing; no tactile sensing.
-- **No hardware trials of the policies yet.** All policy results are simulation.
-- The geometry comes from camera estimates and robot kinematics; the bore is the camera fit, not a direct measurement.
-- Each policy number comes from one training seed.
-- The in-hand spring is elastic, so a real grasp that slips stays slipped while the simulated one springs back.
-- The vision input is a stand-in (oracle) or kinematic only; no images.
+- Initial hardware advantage of residual RL is **not yet quantified publicly**; publish matched trials, initialization distribution, training seed, policy/checkpoint IDs, confidence intervals and force/time trade-offs.
+- Most numeric policy evaluations have **one training seed**; uncertainty intervals across evaluation episodes are not training-seed variability.
+- Printed part bore / grip slip / friction / dynamics need direct real-contact validation. Current elastic in-hand spring does not reproduce irreversible grasp slip.
+- The full vision-conditioned approach-and-contact policy is **not implemented** here; the deployable policy currently uses a kinematic offset estimate, not live camera images.
+- The framework is demonstrated on **one UR5e contact task**. Cross-task portability remains a design goal rather than a verified result.
+- Higher success with RL can be accompanied by **higher peak forces**; report force, safety stops and time alongside seating rate.
 
-## References
+## Related work
 
-- J. Yu et al. *Real2Render2Real: Scaling Robot Data Without Dynamics Simulation or Robot Hardware.* 2025.
-- Y. Narang et al. *Factory: Fast Contact for Robotic Assembly.* RSS 2022.
-- B. Tang et al. *IndustReal: Transferring Contact-Rich Assembly Tasks from Simulation to Reality.* RSS 2023.
-- M. Noseworthy et al. *FORGE: Force-Guided Exploration for Robust Contact-Rich Manipulation under Uncertainty.* 2024.
-- S. Ross, G. Gordon, D. Bagnell. *A Reduction of Imitation Learning and Structured Prediction to No-Regret Online Learning* (DAgger). AISTATS 2011.
-- D. Chen, B. Zhou, V. Koltun, P. Krähenbühl. *Learning by Cheating.* CoRL 2019.
-- J. Schulman et al. *Proximal Policy Optimization Algorithms.* 2017.
-- T. Johannink et al. / T. Silver et al. *Residual Reinforcement Learning for Robot Control* / *Residual Policy Learning.* 2019 / 2018.
+This project builds on [Real2Render2Real](https://real2render2real.com/), Factory, IndustReal, DAgger, asymmetric actor-critic methods and residual reinforcement learning. Detailed methods, decisions and references are retained in [`docs/PLAN.md`](docs/PLAN.md) and [`contact_sim/README.md`](contact_sim/README.md).
 
-MIT License (see `LICENSE`).
+MIT license — see [`LICENSE`](LICENSE).
