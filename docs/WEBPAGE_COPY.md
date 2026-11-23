@@ -36,7 +36,7 @@ This is a **task-portable framework in development**, currently evaluated on one
 
 ## Hardware videos
 
-[Three hardware previews and all 15 original clips](media/hardware/README.md) are available in the repository. Preview labels preserve source groups `0`, `1` and `2`; each shows clip `0` at its original playback rate. Policy/checkpoint and trial mapping have not been supplied, so these clips are not labeled as a matched comparison, a verified success set, or a robustness benchmark. Quantitative hardware results still require the corresponding trial metadata and force logs.
+[Three hardware previews and all 15 original clips](media/hardware/README.md) are available in the repository. Preview labels preserve source groups `0`, `1` and `2`; each shows camera view `4` at its original playback rate, selected for its clear side view of the insertion. Policy/checkpoint metadata have not been supplied, so these clips are not labeled as a matched comparison, a verified success set, or a robustness benchmark. Quantitative hardware results still require the corresponding trial metadata and force logs.
 
 ## Selected implementation details
 

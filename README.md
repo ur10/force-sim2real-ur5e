@@ -137,11 +137,11 @@ Sensor identification corrected a real mismatch in the payload model. However, s
 
 ## Real-robot evaluation footage
 
-The supplied `force_rollout` footage is now included: **three source groups, five original clips per group**. Group meanings and policy/trial mapping were not supplied, so these are labeled by their original folder names. File counts are not independent trial counts, and no success rates, matched comparisons or force measurements are inferred from the clips.
+The supplied `force_rollout` footage is now included: **three source groups, five original clips per group**. The numbered clip files provide camera views; the previews use **camera view `4`**, selected for its clear side view of the gripper, nut and rod. Recordings retain their original folder names; policy/checkpoint labels have not been supplied. File counts are not independent trial counts, and no success rates, matched comparisons or force measurements are inferred from the clips.
 
-Click a poster to open the full-speed preview (clip `0` from each group):
+Click a poster to open the full-speed preview (camera view `4` from each group):
 
-| Source group 0 · 26.50 s | Source group 1 · 22.23 s | Source group 2 · 28.43 s |
+| Recording 0 · 26.53 s | Recording 1 · 22.27 s | Recording 2 · 28.43 s |
 | --- | --- | --- |
 | [![REAL UR5e: source group 0](docs/media/hardware/group-0.jpg)](docs/media/hardware/group-0.mp4) | [![REAL UR5e: source group 1](docs/media/hardware/group-1.jpg)](docs/media/hardware/group-1.mp4) | [![REAL UR5e: source group 2](docs/media/hardware/group-2.jpg)](docs/media/hardware/group-2.mp4) |
 

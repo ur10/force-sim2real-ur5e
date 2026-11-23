@@ -2,7 +2,7 @@
 
 ## Available footage
 
-[The hardware gallery](media/hardware/README.md) contains all 15 supplied files in three numbered source groups, with checksums and three previews. Policy identities, trial/camera mapping and logs were not provided. Do not treat the number of files as an evaluation denominator or infer outcomes from filenames.
+[The hardware gallery](media/hardware/README.md) contains all 15 supplied files in three numbered source groups, with checksums and three previews. The supplied files include multiple camera views; previews use view `4`. Policy identities and logs were not provided. Do not treat the number of files as an evaluation denominator or infer outcomes from filenames.
 
 ## Summary to fill after trial metadata and logs are finalized
 

@@ -1,6 +1,6 @@
 {
   "source": "force_rollout/videos",
-  "note": "Original files preserved byte-for-byte. Group and clip identifiers retain supplied filenames; policy, outcome, trial mapping, timestamps and force logs were not supplied. File counts are not trial counts. Duration is clip length, not task completion time.",
+  "note": "Original files preserved byte-for-byte. The author confirmed that the clips include camera views. Previews use camera file 4 from each source group, chosen for visual clarity. Policy/checkpoint labels, outcomes, timestamps and force logs were not supplied. File counts are not trial counts. Duration is clip length, not task completion time.",
   "files": [
     {
       "source_path": "videos/0/0.mp4",
@@ -211,6 +211,29 @@
           "r_frame_rate": "30/1"
         }
       ]
+    }
+  ],
+  "previews": [
+    {
+      "path": "group-0.mp4",
+      "source_path": "videos/0/4.mp4",
+      "processing": "Video stream copied without re-encoding; MP4 faststart enabled.",
+      "poster_path": "group-0.jpg",
+      "poster_time_s": 18
+    },
+    {
+      "path": "group-1.mp4",
+      "source_path": "videos/1/4.mp4",
+      "processing": "Video stream copied without re-encoding; MP4 faststart enabled.",
+      "poster_path": "group-1.jpg",
+      "poster_time_s": 18
+    },
+    {
+      "path": "group-2.mp4",
+      "source_path": "videos/2/4.mp4",
+      "processing": "Video stream copied without re-encoding; MP4 faststart enabled.",
+      "poster_path": "group-2.jpg",
+      "poster_time_s": 18
     }
   ]
 }
