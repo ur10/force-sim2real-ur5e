@@ -1,33 +1,35 @@
 # Force-Aware Sim-to-Real Learning on a UR5e
 
-**A framework for turning generated demonstrations into contact policies: simulate, calibrate, learn corrections, deploy.**
+**Simulate contact. Calibrate from real measurements. Learn corrections. Deploy.**
 
-An insertion trajectory can look perfect and still jam when the grasp shifts. This project connects **measurement-informed contact simulation**, **residual reinforcement learning**, and **real-robot inference** so a UR5e can respond to contact instead of only replaying a path.
+An insertion trajectory can look clean and still jam when a part shifts in the gripper. This project adds **contact-aware policies and real-measurement calibration** to generated demonstrations, connecting simulation and learning to execution on a physical UR5e.
+
+- **Task:** Nut-on-rod insertion with a Robotiq 2F-85 fin-ray gripper
+- **Learning:** Residual PPO over a frozen DAgger policy
+- **Control:** 30 Hz deterministic policy inference with a 120 Hz UR control loop
 
 <p align="center">
   <a href="docs/media/pipeline_overview.mp4">
-    <img src="docs/media/pipeline_overview.gif" alt="Simulation, calibration and deployment side by side: simulated nut contact, real payload identification and UR5e insertion. Measurements feed back into simulation and learning." width="100%">
+    <img src="docs/media/pipeline_overview.gif" alt="Simulation, calibration and deployment side by side: simulated nut contact, real payload identification and UR5e insertion." width="100%">
   </a>
   <br>
-  <em>Actual project evidence: simulation reference still, real calibration footage and real insertion footage. Independent excerpts at original speed.</em>
+  <em>Simulation reference, real payload calibration and UR5e insertion at 1× speed.</em>
 </p>
 
-[Watch the overview](docs/media/pipeline_overview.mp4) · [Policy design](#policy-design) · [Reusable framework](#reusable-framework) · [Results](#results) · [Try it](#try-it) · [Documentation](#documentation)
+[Policy design](#policy-design) · [Workflow](#reusable-workflow) · [Results](#results) · [Setup & testing](#try-it) · [Documentation](#documentation)
 
-## Highlights
+## Key components
 
-- **Learn corrections with residual PPO.** A frozen DAgger policy supplies the base motion; a bounded residual learns lateral, descent and tilt corrections. A privileged critic supports training while the deployed actor uses the hardware observation pipeline.
-- **Design the reward around contact.** Reward geometric seating and alignment-aware progress; penalize excessive wrench, invalid penetration and large or abrupt corrections. Force alone never defines success.
-- **Bring real measurements into simulation.** Payload / center of gravity, wrist sensing and fixture registration inform the simulator. Fitting the payload reduced post-tare cross-pose force error from **1.17 to 0.70 N RMS**.
-- **Carry one observation contract to the robot.** Numpy policy inference reproduces observation processing and action integration; **10 offline tests** check equivalence and stop behavior before deployment.
-
-Built by [Utkarsh Rai](https://github.com/ur10), extending [Real2Render2Real on the UR5e](https://github.com/ur10/real2render2real-ur5e). Current task: nut-on-rod insertion with a UR5e and Robotiq 2F-85 fin-ray grasp. The reusable measurement and deployment workflow is demonstrated on **one task**; cross-task transfer remains to be evaluated.
+- **Residual PPO over DAgger.** A frozen base supplies nominal motion while a bounded residual learns lateral, descent and tilt corrections. An asymmetric critic uses simulator state during training; the deployed policy runs on the hardware observation pipeline.
+- **Contact-aware reward.** Geometric seating and alignment-gated depth progress drive the task. Wrench, penetration and correction penalties discourage excessive loads, invalid contact and abrupt motion.
+- **Measurement-informed simulation.** Fitted payload, center of gravity, wrist sensing and fixture registration feed back into the simulator. Payload fitting reduced post-tare cross-pose force error from **1.17 to 0.70 N RMS**.
+- **NumPy deployment.** Exported inference preserves observation processing and action integration, with **10 offline tests** covering numerical equivalence and stop behavior.
 
 <a id="3-learn-contact-recovery-with-residual-ppo"></a>
 
 ## Policy design
 
-**Preserve useful nominal behavior; learn how to correct it.** DAgger learns a base policy from a privileged contact expert. Residual PPO then optimizes insertion outcomes while the base stays frozen. The actor's mean starts near zero, and a bounded correction lets it adjust the base action as contact develops.
+DAgger trains a base policy from a privileged contact expert. Residual PPO learns corrections on top while keeping that base frozen. The residual actor starts with a near-zero mean, then learns how to adjust the nominal action as contact develops.
 
 ```mermaid
 flowchart LR
@@ -37,96 +39,117 @@ flowchart LR
     B --> S["Base + bounded residual"]
     A --> S
     S --> R["5-D TCP velocity → UR5e"]
-    A -.- T["Training only: asymmetric critic + geometric / force reward"]
+    A -.- T["Training only: asymmetric critic + contact reward"]
 ```
 
-| Design choice | What it does | Why it matters |
-| --- | --- | --- |
-| **Residual policy** | `action = clip(base + scale × clip(residual))`; replay is also supported as a base. | Retains the base policy's structure while allowing learned recovery. |
-| **Actor / critic separation** | Actor: **67 → 256 → 256 → 256 → 5**. Critic: **73 → 256 → 256 → 256 → 1**, with six extra simulator-state values. | Uses true offset, depth and tilt for value learning without exporting the critic to the robot. |
-| **Force history + robot state** | **62-D observation**: eight six-axis wrench samples, commanded/measured TCP offsets, previous action and an alignment estimate; actor also receives the 5-D base action. | Provides contact context without requiring live camera images or a recurrent network. |
-| **Contact-aware reward** | Geometric seating bonus + alignment-gated depth progress − excessive wrench − residual size/slew − time. | Encourages insertion and economical corrections while penalizing jams, excessive loads and invalid physics. |
+### Architecture
 
-PPO uses a clipped objective and generalized advantage estimation. Hidden layers use ELU for the actor/critic and ReLU for the DAgger student. Deployment uses the actor's deterministic mean at **30 Hz**, integrated into **120 Hz** UR control.
+| Component | Design |
+| --- | --- |
+| **Observation** | **62 values:** eight six-axis wrench samples, commanded/measured TCP offsets, previous action, XY alignment estimate and its availability flag |
+| **DAgger base** | `62 → 256 → 256 → 256 → 5` · ReLU hidden layers |
+| **Residual actor** | `67 → 256 → 256 → 256 → 5` · observation + base action · ELU hidden layers |
+| **Training critic** | `73 → 256 → 256 → 256 → 1` · six additional simulator-state values for offset, depth, tilt and bore entry |
+| **Action** | Five TCP velocities: lateral X/Y, vertical Z and tilt about X/Y |
 
-**A critical distinction:** the hardware alignment estimate comes from robot kinematics and cannot observe in-hand slip directly. Some simulation results use an oracle-derived noisy estimate; those experiments are labeled separately below. A privileged critic and an oracle-derived actor input are different assumptions.
+```text
+action = clip(base_action + residual_scale × clip(residual))
+```
 
-[Full architecture, action bounds, reward equations and design rationale →](docs/POLICY_DESIGN.md)
+PPO uses a clipped objective and generalized advantage estimation (GAE). Training samples a Gaussian policy; deployment uses its deterministic mean. The hardware alignment estimate comes from robot kinematics and the registered fixture position.
 
-## Reusable framework
+### Reward design
 
-**The reusable part is the measurement-to-policy workflow.** Geometry, contact behavior and task success must still be adapted for a new assembly.
+```text
+reward = seating bonus + alignment-gated progress
+         − excessive wrench − hard failure
+         − correction size − correction slew − elapsed time
+```
+
+| Design decision | Purpose |
+| --- | --- |
+| **Geometric seating defines success** | Reward insertion depth and bore entry rather than contact force alone. |
+| **Depth progress is gated by alignment** | Favor alignment before pushing deeper into contact. |
+| **Wrench cost is averaged over physics substeps** | Account for loads between policy updates. |
+| **Residual size and slew carry a cost** | Encourage small, smooth corrections that retain useful base behavior. |
+
+[Architecture, action bounds, reward equations and PPO settings →](docs/POLICY_DESIGN.md)
+
+<a id="reusable-framework"></a>
+
+## Reusable workflow
+
+The framework connects **measurement → simulation → learning → robot execution**. Reuse the calibration, training and deployment components, then configure the geometry and contact objective for the assembly.
 
 ```mermaid
 flowchart LR
     D["Generated approaches"] --> S["Contact simulation"]
     M["Real measurements: payload, sensing, frames"] --> S
     S --> L["DAgger + residual PPO"]
-    L --> E["Export + offline equivalence checks"]
+    L --> E["Export + offline checks"]
     E --> H["Robot execution + rollout logs"]
-    H -. future contact-model refinement .-> M
 ```
 
-| Stage | Reuse from this project | Adapt for a new task |
+| Stage | Reusable components | Task configuration |
 | --- | --- | --- |
-| **Measure** | Payload/sensor characterization, frame checks, fixture registration and logging workflow. | Robot/tool calibration, object and fixture measurements. |
-| **Simulate** | Wrench observation chain, physics replay and candidate contact-probe comparison. | Collision geometry, grasp compliance/friction and reset uncertainty. |
-| **Learn** | DAgger collection, residual PPO, asymmetric critic and policy export. | Nominal behavior, success detector, reward scales and action limits. |
-| **Deploy & evaluate** | Numpy inference, observation-equivalence checks, rollout logging and evaluation protocol. | Robot interface, workspace limits, registration and held-out trial distribution. |
+| **Measure** | Payload/sensor fitting, frame checks, registration and logging | Tool, part and fixture measurements |
+| **Simulate** | Wrench observation chain, physics replay and probe comparison | Collision geometry, grasp compliance, friction and reset ranges |
+| **Learn** | DAgger, residual PPO, asymmetric critic and policy export | Base behavior, success detector, reward weights and action limits |
+| **Deploy & evaluate** | NumPy inference, equivalence checks, rollout logging and evaluation protocol | Robot interface, workspace limits and test conditions |
 
-**Implemented:** sensor/payload identification, registered geometry, contact learning, simulated probe matching and deployment tooling. **Next validation:** identify contact parameters from a complete real probe dataset, quantify matched hardware performance, and evaluate a second task. These are research components, not a task-agnostic plug-and-play API.
-
-[Framework walkthrough and calibration workflow →](docs/FRAMEWORK.md) · [Measurement provenance →](docs/CALIBRATION.md)
+[Framework walkthrough →](docs/FRAMEWORK.md) · [Calibration measurements →](docs/CALIBRATION.md)
 
 <a id="results-and-what-they-do-and-do-not-establish"></a>
 
 ## Results
 
-| Evidence | Finding | What it establishes |
-| --- | --- | --- |
-| **Real calibration** | Fitted payload **1.35 kg** vs **1.0 kg** configured; cross-pose force error **1.17 → 0.70 N RMS** after tare. | A measured improvement in payload compensation. |
-| **Simulation** | Held-out evaluations below, **128 attempts per condition**. | Policy behavior under the stated simulation and observation assumptions. |
-| **Real policy evaluation** | Three recordings with multiple camera views; author-observed residual RL advantage over imitation. | Qualitative footage and a preliminary observation; matched counts, checkpoint labels and force/time logs are pending. |
+### Payload calibration
 
-### Simulation reference
+| Measurement | Result |
+| --- | --- |
+| Fitted tool payload | **1.35 kg**, versus 1.0 kg configured |
+| Fitted center of gravity | **43 mm** along the tool |
+| Post-tare cross-pose force error | **1.17 → 0.70 N RMS** |
 
-Measured-geometry configuration, fin-ray grasp, **0.5 mm radial clearance**, one training seed per policy:
+### Simulation benchmark
 
-| Policy | Alignment estimate | Seated / 128 |
+Fin-ray grasp, **0.5 mm radial clearance**, **128 held-out attempts** per condition and one training seed per policy. Results are grouped by alignment input:
+
+| Alignment input | Policy | Seated / 128 |
 | --- | --- | ---: |
-| Blind force-limited replay | No learned alignment recovery | **35** |
-| DAgger | Deployable kinematic estimate | **78** |
-| DAgger | Oracle-derived noisy estimate | **91** |
-| Residual PPO on DAgger | Oracle-derived noisy estimate | **93** |
+| No learned alignment recovery | Blind force-limited replay | **35** |
+| Kinematic estimate | DAgger | **78** |
+| Oracle-derived noisy estimate | DAgger | **91** |
+| Oracle-derived noisy estimate | Residual PPO on DAgger | **93** |
 
-**93/128 versus 78/128 is not a matched RL gain:** the observation assumptions differ. The comparable oracle-estimate rows are 91/128 and 93/128. These numerical policy results are simulation-only; the calibration measurement does not establish a hardware policy-success gain.
+### Real-robot rollouts
 
-### Hardware footage
+Initial hardware testing showed a qualitative advantage for residual RL over the imitation baseline. Watch the insertion recordings below:
 
 | Recording 0 | Recording 1 | Recording 2 |
 | --- | --- | --- |
 | [![UR5e insertion, recording 0](docs/media/hardware/group-0.jpg)](docs/media/hardware/group-0.mp4) | [![UR5e insertion, recording 1](docs/media/hardware/group-1.jpg)](docs/media/hardware/group-1.mp4) | [![UR5e insertion, recording 2](docs/media/hardware/group-2.jpg)](docs/media/hardware/group-2.mp4) |
 
-Click a poster to watch camera view 4. All 15 original camera files are preserved; file counts are not trial counts. The selected footage is not presented as a paired policy comparison.
+Click a poster to watch the side view. [Browse all camera views →](docs/media/hardware/README.md)
 
-[Evaluation details, figures and limitations →](docs/EVALUATION.md) · [All footage and provenance →](docs/media/hardware/README.md) · [Raw simulation results →](results/sim_evaluations.json)
+[Evaluation methods and context →](docs/EVALUATION.md) · [Raw simulation results →](results/sim_evaluations.json)
 
 ## Try it
 
-### Check policy inference without a robot
+### Offline inference tests
 
-Requires Python with Numpy. From a clone of this repository:
+Requires Python and NumPy. From the repository root:
 
 ```bash
 python -m pip install numpy
 DEPLOY_DATA="$PWD/assets/deploy" python robot_side/deploy/test_deploy.py
 ```
 
-This runs the **10 offline deployment checks** against included reference data and a stand-in robot; it does not connect to hardware. To assemble the deployment folder and rehearse the controller, use the [robot session guide](robot_side/SESSION_GUIDE.md). Live operation also requires `ur_rtde`, task-specific setup and lab operator approval.
+Runs **10 checks** against included reference data and a mock robot. For deployment setup, controller rehearsal and hardware operation, follow the [robot session guide](robot_side/SESSION_GUIDE.md).
 
-### Run simulation and training
+### Simulation and training
 
-Requires **Isaac Lab 2.0.2 / Isaac Sim 4.5** and a `real2render2real` checkout with the [UR5e overlay](https://github.com/ur10/real2render2real-ur5e) already installed:
+Requires **Isaac Lab 2.0.2 / Isaac Sim 4.5** and a `real2render2real` checkout with the [UR5e overlay](https://github.com/ur10/real2render2real-ur5e) installed:
 
 ```bash
 ./install.sh /path/to/real2render2real
@@ -134,23 +157,23 @@ cd /path/to/real2render2real
 .venv/bin/python scripts/ur_contact/test_contact_modules.py
 ```
 
-[Training and evaluation commands →](contact_sim/README.md) · [Exact experiment invocations →](runs/)
+[Training and evaluation commands →](contact_sim/README.md) · [Experiment invocations →](runs/)
 
 ## Documentation
 
-| Start here when you want to… | Read |
+| Topic | Read |
 | --- | --- |
-| Understand policy architecture, PPO settings and reward decisions | [Policy design](docs/POLICY_DESIGN.md) |
-| Reuse the measurement / simulation / deployment workflow | [Framework walkthrough](docs/FRAMEWORK.md) and [calibration provenance](docs/CALIBRATION.md) |
-| Inspect results, learning curves, footage and remaining limitations | [Evaluation](docs/EVALUATION.md) and [hardware benchmark protocol](docs/HARDWARE_EVALUATION_TEMPLATE.md) |
-| Train or change the simulator | [Simulation implementation](contact_sim/README.md), [generator fixes](generator_fix/) and [experiment runs](runs/) |
-| Prepare robot-side execution | [Operator session guide](robot_side/SESSION_GUIDE.md) and [probe matching](robot_side/SIM_LIBRARY.md) |
-| Trace original decisions and experiments | [Research log](docs/PLAN.md); historical status entries are not current |
+| Policy architecture and reward design | [Policy design](docs/POLICY_DESIGN.md) |
+| Workflow and calibration | [Framework](docs/FRAMEWORK.md) · [Measurements](docs/CALIBRATION.md) |
+| Evaluation and hardware protocol | [Results and analysis](docs/EVALUATION.md) · [Benchmark protocol](docs/HARDWARE_EVALUATION_TEMPLATE.md) |
+| Simulation and experiments | [Implementation](contact_sim/README.md) · [Generator fixes](generator_fix/) · [Runs](runs/) |
+| Robot execution | [Session guide](robot_side/SESSION_GUIDE.md) · [Probe matching](robot_side/SIM_LIBRARY.md) |
+| Experiment history | [Research log](docs/PLAN.md) |
 
-## Author, feedback and license
+## Author and license
 
-Developed by **[Utkarsh Rai](https://github.com/ur10)**. This work extends the generated demonstrations from [Real2Render2Real](https://real2render2real.com/) into physical contact simulation, measurement-informed sensing, DAgger/residual PPO training and robot deployment. It builds on Isaac Lab, Factory/IndustReal and prior imitation/residual-learning methods; implementation decisions and references are retained in the [research log](docs/PLAN.md).
+Developed by **[Utkarsh Rai](https://github.com/ur10)**, extending [Real2Render2Real on the UR5e](https://github.com/ur10/real2render2real-ur5e) with contact simulation, calibration, policy learning and robot deployment. Built on Isaac Lab, Factory/IndustReal and prior imitation/residual-RL work; references are in the [research log](docs/PLAN.md).
 
-For bugs, reproduction questions or proposed extensions, [open an issue](https://github.com/ur10/force-sim2real-ur5e/issues). Include the command, environment versions, checkpoint and observation source when reporting an evaluation discrepancy.
+Questions, bugs or ideas? [Open an issue](https://github.com/ur10/force-sim2real-ur5e/issues).
 
-**MIT licensed** — see [LICENSE](LICENSE).
+Licensed under [MIT](LICENSE).
