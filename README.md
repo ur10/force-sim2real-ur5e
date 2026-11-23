@@ -4,7 +4,6 @@
 
 [Project background: Real2Render2Real](https://github.com/ur10/real2render2real-ur5e) · [Research plan and experiment log](docs/PLAN.md) · [Simulation implementation](contact_sim/README.md) · [Hardware evaluation template](docs/HARDWARE_EVALUATION_TEMPLATE.md)
 
-> **Evaluation status · November 23, 2026.** Initial independent hardware testing suggests that the **residual RL policy performs better on the UR5e than the imitation-learning baseline**. This is a preliminary observation supplied by the project author; [Hardware rollout footage is now included](docs/media/hardware/README.md); comparable trial counts, policy/checkpoint labels and force traces have not yet been published. All numerical policy success rates below are **simulation results**, not robot results. Payload, wrist-sensor characterization, rod registration, and deployment equivalence checks have been completed. Full real-contact parameter identification and a controlled hardware benchmark remain future work.
 
 <p align="center">
   <img src="docs/media/comparison_measured.jpg" alt="Five simulated insertion strategies evaluated on the same held-out examples" width="95%">
