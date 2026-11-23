@@ -1,14 +1,26 @@
-# From Demonstrations to Contact: Calibration-Driven Sim-to-Real Learning on a UR5e
+# From Simulation to Real Contact on a UR5e
 
-**A force-aware manipulation pipeline that connects generated demonstrations, physical contact simulation, real-robot calibration, imitation learning, and residual reinforcement learning.**
+**Learn contact recovery in simulation. Calibrate against the real robot. Deploy force-aware insertion.**
 
-[Project background: Real2Render2Real](https://github.com/ur10/real2render2real-ur5e) · [Research plan and experiment log](docs/PLAN.md) · [Simulation implementation](contact_sim/README.md) · [Hardware evaluation template](docs/HARDWARE_EVALUATION_TEMPLATE.md)
-
+Generated demonstrations provide the approach; **DAgger and residual RL** learn the contact response. Real measurements of payload, wrist sensing and fixture position connect the simulator to the physical UR5e.
 
 <p align="center">
-  <img src="docs/media/comparison_measured.jpg" alt="Five simulated insertion strategies evaluated on the same held-out examples" width="95%">
+  <a href="docs/media/pipeline_overview.mp4">
+    <img src="docs/media/pipeline_overview.gif" alt="Three-stage pipeline: Isaac Lab contact simulation and DAgger/residual PPO; real UR5e payload, sensor and frame calibration feeding back into simulation; exported policy running real nut-on-rod insertion." width="100%">
+  </a>
 </p>
-<p align="center"><em>SIMULATION · Same held-out insertion starts, comparing replay, DAgger, residual RL and a privileged teacher. An invalid physics episode is counted as failure.</em></p>
+
+<p align="center"><strong>SIMULATE → CALIBRATE → DEPLOY</strong><br><em>Actual project evidence: simulation reference still, real calibration footage, and a real insertion excerpt. Calibration feeds back into simulation and training; the excerpts are independent, not a paired benchmark.</em></p>
+
+[Watch the overview](docs/media/pipeline_overview.mp4) · [Static overview](docs/media/pipeline_overview.png) · [Hardware rollouts](docs/media/hardware/README.md) · [Calibration evidence](docs/CALIBRATION.md) · [Results](#results-and-what-they-do-and-do-not-establish)
+
+| Simulate contact | Calibrate the model | Deploy on hardware |
+| --- | --- | --- |
+| Generated approaches become physical contact episodes with grasp and fixture uncertainty. **DAgger + residual PPO** learn corrections. | Measure **payload / CoG, wrist noise and rod pose**; use those measurements in the simulated observation chain. | Export **Numpy inference** with matching observation processing. Run at **30 Hz**, with **120 Hz** UR control. |
+
+**Evidence at a glance:** measured tool payload **1.35 kg**; post-tare cross-pose force error **1.17 → 0.70 N RMS**; held-out simulation evaluations and real rollout footage are included. Hardware policy comparisons remain **preliminary and qualitative**; full contact-parameter identification and a controlled hardware benchmark remain open.
+
+[Precursor: Real2Render2Real](https://github.com/ur10/real2render2real-ur5e) · [Simulation implementation](contact_sim/README.md) · [Research log](docs/PLAN.md) · [Hardware evaluation protocol](docs/HARDWARE_EVALUATION_TEMPLATE.md)
 
 ## The problem: good demonstrations do not teach contact recovery
 
@@ -113,6 +125,11 @@ Policy frequency: **30 Hz**; UR control via `servoL`: **120 Hz**. Deployment inc
 **Why this matters:** A policy that looks comparable to imitation in simulation may behave differently once contact, compliance, sensor artifacts and reset variability come from the physical system. The next experiment is designed to identify the source of that difference.
 
 ### Reproducible simulation reference
+
+<p align="center">
+  <img src="docs/media/comparison_measured.jpg" alt="Five simulated insertion strategies evaluated on the same held-out examples" width="95%">
+</p>
+<p align="center"><em>SIMULATION · Same held-out insertion starts, comparing replay, DAgger, residual RL and a privileged teacher. An invalid physics episode is counted as failure.</em></p>
 
 All results below are **SIMULATION**, measured-parameter configuration, fin-ray grasp, **0.5 mm radial clearance**, 128 held-out episodes per evaluation, one training seed per policy. See [`results/sim_evaluations.json`](results/sim_evaluations.json).
 
